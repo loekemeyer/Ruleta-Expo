@@ -43,16 +43,18 @@
   }
 
   .screen{
-    width:100vw;
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:14px;
-    padding:14px 18px 20px;
-    overflow:hidden;
-  }
+   width:100vw;
+   height:100vh;
+ 
+   display:flex;
+   flex-direction:column;
+ 
+   align-items:center;
+   justify-content:center;
+ 
+   gap:20px;
+   padding:20px;
+ }
 
   .title{
     margin:0;
@@ -75,13 +77,13 @@
 
   .scene{
    position:relative;
-   width:min(92vw, 74vh);
-   height:min(92vw, 74vh);
+ 
+   width:min(70vh,900px);
+   height:min(70vh,900px);
+ 
    display:flex;
    align-items:center;
    justify-content:center;
-   margin-top:-12px;
-   margin-bottom:18px;
  }
 
   .platform{
@@ -352,20 +354,20 @@
   }
 
   .result{
-   min-height:88px;
+   min-height:80px;
+ 
    display:flex;
    align-items:center;
    justify-content:center;
+ 
    text-align:center;
-   font-size:44px;
+ 
+   font-size:64px;
    font-weight:900;
-   letter-spacing:.02em;
-   text-shadow:0 5px 18px rgba(0,0,0,.35);
-   margin-top:8px;
-   margin-bottom:2px;
-   padding:0 16px;
-   position:relative;
-   z-index:120;
+ 
+   letter-spacing:.03em;
+ 
+   text-shadow:0 6px 18px rgba(0,0,0,.35);
  }
 
   .controls{
@@ -430,11 +432,6 @@
   </div>
 
   <div id="resultBig" class="result"></div>
-
-  <div class="controls">
-    <button id="spinBtnMain" class="btn btn-spin">Girar ruleta</button>
-    <button id="resetBtn" class="btn btn-reset">Reset</button>
-  </div>
 </div>
 
 <script>
@@ -704,7 +701,7 @@
 
     requestAnimationFrame(frame);
   }
-
+  document.body.addEventListener("click", spin);
   function resetWheel(){
     if(spinning) return;
     currentRotation = 0;
