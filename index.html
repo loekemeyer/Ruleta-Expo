@@ -3,21 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ruleta de Premios</title>
+<title>Ruleta Expo</title>
 
 <style>
   *{box-sizing:border-box}
 
   :root{
-    --bg1:#09090b;
-    --bg2:#15151b;
-    --panel:rgba(255,255,255,.08);
-    --panel-border:rgba(255,255,255,.12);
-    --text:#ffffff;
-    --muted:rgba(255,255,255,.72);
-    --accent:#ffd166;
-    --accent2:#06d6a0;
-    --ring:#0d9488;
+    --bg1:#06070b;
+    --bg2:#121520;
+    --bg3:#1a1f2e;
+    --gold:#f6c453;
+    --teal:#0f766e;
+    --cream:#fff3dc;
+    --dark:#161616;
   }
 
   html,body{
@@ -27,62 +25,65 @@
     overflow:hidden;
     font-family:Arial, Helvetica, sans-serif;
     background:
-      radial-gradient(circle at top, #20202a 0%, #111118 45%, #08080c 100%);
-    color:var(--text);
+      radial-gradient(circle at 50% 18%, #2b3145 0%, #161b29 38%, #090b12 100%);
+    color:#fff;
   }
 
-  .app{
+  .screen{
     width:100%;
     height:100%;
     display:flex;
     flex-direction:column;
     align-items:center;
-    padding:14px 12px 12px;
-    gap:10px;
+    justify-content:center;
+    padding:2vh 2vw;
+    gap:2vh;
   }
 
-  .title{
-    font-size:clamp(18px, 4vw, 28px);
-    font-weight:900;
-    letter-spacing:.8px;
+  .top-title{
+    text-align:center;
     text-transform:uppercase;
-    text-align:center;
+    letter-spacing:.12em;
+    font-weight:900;
+    line-height:1;
     margin:0;
+    font-size:min(3.2vw, 3.2vh, 34px);
+    color:#ffffff;
+    opacity:.95;
   }
 
-  .subtitle{
+  .sub-title{
     margin:0;
-    font-size:13px;
-    color:var(--muted);
     text-align:center;
+    font-size:min(1.5vw, 1.7vh, 18px);
+    font-weight:700;
+    color:rgba(255,255,255,.72);
+    letter-spacing:.08em;
+    text-transform:uppercase;
   }
 
-  .wheel-area{
-    width:100%;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:8px;
-  }
-
-  .wheel-wrap{
+  .wheel-stage{
     position:relative;
-    width:min(78vw, 440px);
-    height:min(78vw, 440px);
+    width:min(78vw, 78vh, 900px);
+    height:min(78vw, 78vh, 900px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 auto;
   }
 
   .pointer{
     position:absolute;
-    top:-8px;
+    top:-0.5%;
     left:50%;
     transform:translateX(-50%);
     width:0;
     height:0;
-    border-left:20px solid transparent;
-    border-right:20px solid transparent;
-    border-top:34px solid #fff;
+    border-left:min(1.5vw, 16px) solid transparent;
+    border-right:min(1.5vw, 16px) solid transparent;
+    border-top:min(3vw, 34px) solid #ffffff;
     z-index:50;
-    filter:drop-shadow(0 4px 8px rgba(0,0,0,.45));
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,.45));
     transform-origin:50% 100%;
   }
 
@@ -108,10 +109,11 @@
     inset:0;
     border-radius:50%;
     overflow:hidden;
-    border:10px solid var(--ring);
+    border:min(1.1vw, 12px) solid #0f766e;
     box-shadow:
-      0 12px 35px rgba(0,0,0,.45),
-      inset 0 0 0 4px rgba(255,255,255,.10);
+      0 20px 55px rgba(0,0,0,.45),
+      inset 0 0 0 min(.35vw, 4px) rgba(255,255,255,.12),
+      inset 0 0 50px rgba(0,0,0,.18);
     will-change:transform;
     background:
       conic-gradient(
@@ -144,268 +146,205 @@
   }
 
   .sector-lines line{
-    stroke:rgba(0,0,0,.42);
-    stroke-width:3.4;
+    stroke:rgba(0,0,0,.38);
+    stroke-width:3.5;
   }
 
   .labels-svg text{
-    fill:#fff8e8;
-    stroke:rgba(0,0,0,.34);
-    stroke-width:2px;
+    fill:var(--cream);
+    stroke:rgba(70,34,12,.65);
+    stroke-width:1.6px;
     paint-order:stroke fill;
     font-weight:900;
-    letter-spacing:.2px;
+    letter-spacing:.4px;
   }
 
   .center-cap{
     position:absolute;
     top:50%;
     left:50%;
-    width:34%;
+    width:30%;
     aspect-ratio:1/1;
     transform:translate(-50%,-50%);
     border-radius:50%;
+    z-index:30;
     background:
-      radial-gradient(circle at 30% 30%, #ffffff 0%, #f7f7f7 45%, #dddddd 100%);
-    border:10px solid var(--ring);
+      radial-gradient(circle at 30% 30%, #ffffff 0%, #f4f4f4 55%, #dcdcdc 100%);
+    border:min(1vw, 10px) solid #0f766e;
     box-shadow:
-      0 8px 18px rgba(0,0,0,.35),
-      inset 0 0 0 4px rgba(255,255,255,.35);
-    z-index:20;
+      0 12px 28px rgba(0,0,0,.35),
+      inset 0 0 0 min(.35vw, 4px) rgba(255,255,255,.42);
     display:flex;
     align-items:center;
     justify-content:center;
     text-align:center;
-    padding:10px;
+    padding:1.2vw;
   }
 
   .center-content{
-    line-height:1.05;
-    color:#171717;
+    color:#111;
+    line-height:1;
+    text-transform:uppercase;
+    user-select:none;
+    pointer-events:none;
   }
 
-  .center-mini{
-    font-size:11px;
+  .center-small{
+    font-size:min(1.15vw, 1.15vh, 13px);
     font-weight:800;
-    color:#555;
-    text-transform:uppercase;
-    margin-bottom:4px;
+    color:#7a7a7a;
+    letter-spacing:.08em;
+    margin-bottom:.35em;
   }
 
   .center-main{
-    font-size:clamp(20px, 3.3vw, 30px);
+    font-size:min(3vw, 3vh, 34px);
     font-weight:900;
     color:#0f766e;
-    text-transform:uppercase;
+    letter-spacing:.04em;
   }
 
-  .center-sub{
-    margin-top:4px;
-    font-size:11px;
-    font-weight:800;
-    color:#c2410c;
-    text-transform:uppercase;
+  .center-bottom{
+    margin-top:.45em;
+    display:inline-block;
+    background:linear-gradient(135deg, #f6c453, #e7a91d);
+    color:#fff;
+    padding:.42em .9em;
+    border-radius:999px;
+    font-size:min(1vw, 1vh, 12px);
+    font-weight:900;
+    letter-spacing:.08em;
   }
 
   .spin-btn{
     position:absolute;
     inset:0;
     border:none;
-    background:transparent;
     border-radius:50%;
+    background:transparent;
     cursor:pointer;
-    z-index:30;
+    z-index:35;
   }
 
-  .spin-btn:disabled{
-    cursor:not-allowed;
+  .result-box{
+    min-height:12vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:.8vh;
+  }
+
+  .result-label{
+    margin:0;
+    font-size:min(1.6vw, 1.8vh, 18px);
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,.6);
+    font-weight:800;
   }
 
   .result-big{
-    min-height:32px;
-    font-size:clamp(22px, 5vw, 34px);
+    margin:0;
+    min-height:1.2em;
+    font-size:min(4.5vw, 4.5vh, 54px);
+    line-height:1.05;
     font-weight:900;
     text-align:center;
-    text-shadow:0 3px 10px rgba(0,0,0,.4);
+    text-shadow:0 6px 18px rgba(0,0,0,.35);
   }
 
-  .actions{
+  .cta{
     display:flex;
-    gap:8px;
+    gap:14px;
     justify-content:center;
+    align-items:center;
     flex-wrap:wrap;
   }
 
   .btn{
     border:none;
-    border-radius:999px;
-    padding:10px 14px;
-    font-weight:800;
     cursor:pointer;
-    font-size:13px;
+    border-radius:999px;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    transition:transform .15s ease, opacity .15s ease;
   }
 
-  .btn-primary{
-    background:linear-gradient(135deg, #ffd166, #f59e0b);
-    color:#191919;
+  .btn:hover{ transform:translateY(-1px); }
+  .btn:active{ transform:translateY(0); }
+
+  .btn-spin{
+    background:linear-gradient(135deg, #ffd166, #e9a91d);
+    color:#171717;
+    padding:1em 1.8em;
+    font-size:min(1.4vw, 1.6vh, 18px);
+    box-shadow:0 10px 24px rgba(233,169,29,.22);
   }
 
-  .btn-secondary{
+  .btn-reset{
     background:rgba(255,255,255,.08);
     color:#fff;
     border:1px solid rgba(255,255,255,.12);
+    padding:.95em 1.5em;
+    font-size:min(1.15vw, 1.3vh, 15px);
   }
 
-  .bottom-panel{
-    width:min(94vw, 520px);
-    flex:1 1 auto;
-    min-height:0;
-    overflow:auto;
-    background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
-    border:1px solid var(--panel-border);
-    border-radius:18px;
-    box-shadow:0 10px 26px rgba(0,0,0,.28);
-    padding:12px;
-  }
+  @media (max-aspect-ratio: 10/16){
+    .wheel-stage{
+      width:min(88vw, 68vh);
+      height:min(88vw, 68vh);
+    }
 
-  .panel-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    margin-bottom:8px;
-  }
-
-  .panel-title{
-    margin:0;
-    font-size:16px;
-    font-weight:900;
-    text-transform:uppercase;
-  }
-
-  .badge{
-    font-size:12px;
-    font-weight:800;
-    padding:6px 10px;
-    border-radius:999px;
-    background:rgba(255,255,255,.08);
-    color:#fff;
-    white-space:nowrap;
-  }
-
-  table{
-    width:100%;
-    border-collapse:separate;
-    border-spacing:0 7px;
-    font-size:14px;
-  }
-
-  thead th{
-    font-size:10px;
-    text-transform:uppercase;
-    opacity:.76;
-    padding:0 10px;
-  }
-
-  tbody tr{
-    background:rgba(255,255,255,.05);
-  }
-
-  td{
-    padding:10px;
-    vertical-align:middle;
-  }
-
-  td:last-child{
-    text-align:right;
-    font-weight:900;
-  }
-
-  .footer-note{
-    text-align:center;
-    font-size:11px;
-    color:rgba(255,255,255,.55);
-    margin-top:6px;
-  }
-
-  @media (max-height: 760px){
-    .wheel-wrap{
-      width:min(64vw, 330px);
-      height:min(64vw, 330px);
+    .center-cap{
+      width:32%;
     }
 
     .result-big{
-      font-size:clamp(18px, 4.4vw, 28px);
-      min-height:24px;
-    }
-
-    .bottom-panel{
-      padding:10px;
-    }
-
-    td{
-      padding:8px 10px;
+      font-size:min(6vw, 3.8vh, 44px);
     }
   }
 </style>
 </head>
 <body>
 
-<div class="app">
-  <h1 class="title">Ruleta de Premios</h1>
-  <p class="subtitle">Tocá el centro o el botón para girar</p>
+<div class="screen">
+  <h1 class="top-title">Ruleta de Premios</h1>
+  <p class="sub-title">Expo 2026</p>
 
-  <div class="wheel-area">
-    <div class="wheel-wrap">
-      <div id="pointer" class="pointer"></div>
+  <div class="wheel-stage">
+    <div id="pointer" class="pointer"></div>
 
-      <div class="wheel">
-        <div id="wheelRotator" class="wheel-rotator">
-          <svg id="sectorLines" class="sector-lines" viewBox="0 0 100 100"></svg>
-          <svg id="labelsSvg" class="labels-svg" viewBox="0 0 100 100"></svg>
-        </div>
-
-        <div class="center-cap">
-          <div class="center-content">
-            <div class="center-mini">Probá</div>
-            <div class="center-main">Suerte</div>
-            <div class="center-sub">Girar</div>
-          </div>
-          <button id="spinBtn" class="spin-btn" aria-label="Girar ruleta"></button>
-        </div>
+    <div class="wheel">
+      <div id="wheelRotator" class="wheel-rotator">
+        <svg id="sectorLines" class="sector-lines" viewBox="0 0 100 100" aria-hidden="true"></svg>
+        <svg id="labelsSvg" class="labels-svg" viewBox="0 0 100 100" aria-hidden="true"></svg>
       </div>
-    </div>
 
-    <div id="resultBig" class="result-big"></div>
-
-    <div class="actions">
-      <button id="spinBtn2" class="btn btn-primary">Girar ruleta</button>
-      <button id="resetBtn" class="btn btn-secondary">Reset</button>
+      <div class="center-cap">
+        <div class="center-content">
+          <div class="center-small">Probá</div>
+          <div class="center-main">Suerte</div>
+          <div class="center-bottom">Girar</div>
+        </div>
+        <button id="spinBtnCenter" class="spin-btn" aria-label="Girar ruleta"></button>
+      </div>
     </div>
   </div>
 
-  <div class="bottom-panel">
-    <div class="panel-top">
-      <h3 class="panel-title">Resultados</h3>
-      <div id="totalSpins" class="badge">Total: 0</div>
-    </div>
+  <div class="result-box">
+    <p class="result-label">Resultado</p>
+    <p id="resultBig" class="result-big"></p>
+  </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Premio</th>
-          <th style="text-align:right;">Veces</th>
-        </tr>
-      </thead>
-      <tbody id="results"></tbody>
-    </table>
-
-    <div class="footer-note">Los resultados quedan guardados en este navegador.</div>
+  <div class="cta">
+    <button id="spinBtnMain" class="btn btn-spin">Girar ruleta</button>
+    <button id="resetBtn" class="btn btn-reset">Reset</button>
   </div>
 </div>
 
 <script>
-  // 15 valores que pasaste + 1 adicional de 3% para completar 16 casilleros
   const options = [
     "3%","PREMIO 2","8%","PREMIO 4",
     "3%","PREMIO 1","5%","3%",
@@ -413,27 +352,19 @@
     "3%","PREMIO 3","5%","3%"
   ];
 
-  const visibleOrder = ["3%","5%","8%","10%","PREMIO 1","PREMIO 2","PREMIO 3","PREMIO 4"];
   const step = 360 / options.length;
   const POINTER_TIP_ANGLE = 270;
   const EPS_DEG = 1e-6;
   const SPIN_DURATION = 5200;
-
-  let counts = JSON.parse(localStorage.getItem("ruleta_premios_nueva")) || {};
-  visibleOrder.forEach(k => {
-    if (typeof counts[k] !== "number") counts[k] = 0;
-  });
 
   const wheelRotator = document.getElementById("wheelRotator");
   const labelsSvg = document.getElementById("labelsSvg");
   const sectorLines = document.getElementById("sectorLines");
   const pointer = document.getElementById("pointer");
   const resultBig = document.getElementById("resultBig");
-  const resultsDiv = document.getElementById("results");
-  const totalSpinsEl = document.getElementById("totalSpins");
+  const spinBtnCenter = document.getElementById("spinBtnCenter");
+  const spinBtnMain = document.getElementById("spinBtnMain");
   const resetBtn = document.getElementById("resetBtn");
-  const spinBtn = document.getElementById("spinBtn");
-  const spinBtn2 = document.getElementById("spinBtn2");
 
   let currentRotation = 0;
   let spinning = false;
@@ -455,12 +386,12 @@
 
     gain.gain.setValueAtTime(0.001, t);
     gain.gain.exponentialRampToValueAtTime(0.18, t + 0.004);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.028);
 
     osc.connect(gain);
     gain.connect(audioCtx.destination);
     osc.start(t);
-    osc.stop(t + 0.035);
+    osc.stop(t + 0.03);
   }
 
   function tickPointer(){
@@ -489,7 +420,7 @@
       const ang = i * step;
       const p = polarPoint(cx, cy, r, ang);
 
-      const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
       line.setAttribute("x1", cx);
       line.setAttribute("y1", cy);
       line.setAttribute("x2", p.x.toFixed(3));
@@ -503,42 +434,32 @@
 
     const cx = 50;
     const cy = 50;
-    const radius = 38;
+    const radius = 38.2;
 
     options.forEach((txt, i) => {
       const ang = i * step + step / 2;
       const p = polarPoint(cx, cy, radius, ang);
 
-      const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+      const isPercent = txt.includes("%");
+      const fontSize = isPercent ? "7.8" : "4.6";
+
+      const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
       t.setAttribute("x", p.x.toFixed(3));
       t.setAttribute("y", p.y.toFixed(3));
       t.setAttribute("text-anchor", "middle");
       t.setAttribute("dominant-baseline", "middle");
+      t.setAttribute("font-size", fontSize);
+
+      // Texto en vertical
+      // 1) gira con el sector
+      // 2) además aplica writing-mode vertical visualmente
+      t.style.writingMode = "vertical-rl";
+      t.style.glyphOrientationVertical = "0";
       t.setAttribute("transform", `rotate(${ang + 90} ${p.x.toFixed(3)} ${p.y.toFixed(3)})`);
 
-      const isPercent = txt.includes("%");
-      t.setAttribute("font-size", isPercent ? "7.2" : "4.6");
       t.textContent = txt;
-
       labelsSvg.appendChild(t);
     });
-  }
-
-  function renderResults(){
-    const total = Object.values(counts).reduce((a,b) => a + (Number(b) || 0), 0);
-    resultsDiv.innerHTML = "";
-
-    visibleOrder.forEach(k => {
-      const c = Number(counts[k] || 0);
-      resultsDiv.innerHTML += `
-        <tr>
-          <td>${k}</td>
-          <td>${c}</td>
-        </tr>
-      `;
-    });
-
-    totalSpinsEl.textContent = `Total: ${total}`;
   }
 
   function normalize360(a){
@@ -557,8 +478,8 @@
     if(spinning) return;
 
     spinning = true;
-    spinBtn.disabled = true;
-    spinBtn2.disabled = true;
+    spinBtnCenter.disabled = true;
+    spinBtnMain.disabled = true;
     ensureAudio();
     resultBig.textContent = "";
 
@@ -595,37 +516,30 @@
         const finalIdx = indexUnderPointer(currentRotation);
         const result = options[finalIdx];
 
-        counts[result] = (Number(counts[result]) || 0) + 1;
-        localStorage.setItem("ruleta_premios_nueva", JSON.stringify(counts));
+        resultBig.textContent = `🎉 ${result}`;
 
-        renderResults();
-        resultBig.textContent = `🎉 Ganaste ${result}`;
         spinning = false;
-        spinBtn.disabled = false;
-        spinBtn2.disabled = false;
+        spinBtnCenter.disabled = false;
+        spinBtnMain.disabled = false;
       }
     }
 
     requestAnimationFrame(frame);
   }
 
-  spinBtn.addEventListener("click", spin);
-  spinBtn2.addEventListener("click", spin);
-
-  resetBtn.addEventListener("click", () => {
+  function resetWheel(){
     if(spinning) return;
-
-    const next = {};
-    visibleOrder.forEach(k => next[k] = 0);
-    counts = next;
-    localStorage.setItem("ruleta_premios_nueva", JSON.stringify(counts));
+    currentRotation = 0;
+    wheelRotator.style.transform = "rotate(0deg)";
     resultBig.textContent = "";
-    renderResults();
-  });
+  }
+
+  spinBtnCenter.addEventListener("click", spin);
+  spinBtnMain.addEventListener("click", spin);
+  resetBtn.addEventListener("click", resetWheel);
 
   drawSectorLines();
   drawLabels();
-  renderResults();
 </script>
 </body>
 </html>
