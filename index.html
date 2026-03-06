@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ruleta Expo 2026</title>
+
+<style>
+  *{box-sizing:border-box}
+
+  body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:
+      radial-gradient(circle at center, #2a2a2a 0%, #111 55%, #070707 100%);
+    color:#fff;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+  }
+
+  .app{
+    width:min(100vw, 720px);
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:20px 14px 24px;
+    gap:18px;
+  }
+
+  .title{
+    font-size:clamp(18px, 2.6vw, 28px);
+    font-weight:900;
+    letter-spacing:.6px;
+    text-transform:uppercase;
+    text-align:center;
+    opacity:.95;
+  }
+
+  .wheel-area{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .wheel-wrap{
+    position:relative;
+    width:min(88vw, 540px);
+    height:min(88vw, 540px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .pointer{
+    position:absolute;
+    top:-8px;
+    left:50%;
+    transform:translateX(-50%);
+    width:0;
+    height:0;
+    border-left:22px solid transparent;
+    border-right:22px solid transparent;
+    border-top:38px solid #fff;
+    z-index:40;
+    filter:drop-shadow(0 4px 6px rgba(0,0,0,.45));
+    transform-origin:50% 100%;
+  }
+
+  .pointer.tick{
+    animation:tick 70ms ease-out;
+  }
+
+  @keyframes tick{
+    0%{ transform:translateX(-50%) rotate(0deg); }
+    50%{ transform:translateX(-50%) rotate(-10deg); }
+    100%{ transform:translateX(-50%) rotate(0deg); }
+  }
+
+  .wheel{
+    position:relative;
+    width:100%;
+    height:100%;
+  }
+
+  .wheel-rotator{
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    border:10px solid #0f615b;
+    overflow:hidden;
+    box-shadow:
+      0 12px 35px rgba(0,0,0,.45),
+      inset 0 0 0 4px rgba(255,255,255,.12);
+    will-change:transform;
+    background:
+      conic-gradient(
+        #d6a162 0deg 22.5deg,
+        #db4d4d 22.5deg 45deg,
+        #5f2dcf 45deg 67.5deg,
+        #e14aa0 67.5deg 90deg,
+        #1ec7b6 90deg 112.5deg,
+        #d89a58 112.5deg 135deg,
+        #d33232 135deg 157.5deg,
+        #4a2adf 157.5deg 180deg,
+        #17bcae 180deg 202.5deg,
+        #d2a05f 202.5deg 225deg,
+        #d83b3b 225deg 247.5deg,
+        #5c31dc 247.5deg 270deg,
+        #e3489e 270deg 292.5deg,
+        #19c9b7 292.5deg 315deg,
+        #d79852 315deg 337.5deg,
+        #cb3737 337.5deg 360deg
+      );
+  }
+
+  .sector-lines{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+  }
+
+  .sector-lines line{
+    stroke:rgba(0,0,0,.5);
+    stroke-width:4;
+  }
+
+  .labels-svg{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+  }
+
+  .labels-svg text{
+    font-size:34px;
+    font-weight:900;
+    fill:#f4d2a8;
+    stroke:rgba(70,32,16,.7);
+    stroke-width:3px;
+    paint-order:stroke fill;
+    letter-spacing:.5px;
+    text-shadow:0 2px 2px rgba(0,0,0,.35);
+  }
+
+  .center-cap{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:44%;
+    aspect-ratio:1/1;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    overflow:hidden;
+    z-index:30;
+    border:10px solid #0f615b;
+    box-shadow:
+      0 8px 18px rgba(0,0,0,.35),
+      inset 0 0 0 4px rgba(255,255,255,.18);
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    user-select:none;
+  }
+
+  .center-cap img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .spin-btn{
+    position:absolute;
+    inset:0;
+    border:none;
+    background:transparent;
+    cursor:pointer;
+    z-index:35;
+  }
+
+  .spin-btn:disabled{
+    cursor:not-allowed;
+  }
+
+  .result-big{
+    min-height:48px;
+    margin-top:14px;
+    font-size:clamp(26px, 4vw, 38px);
+    font-weight:900;
+    text-align:center;
+    text-shadow:0 4px 12px rgba(0,0,0,.45);
+  }
+
+  .bottom-panel{
+    width:min(92vw, 540px);
+    background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:18px;
+    padding:14px 14px 12px;
+    box-shadow:0 12px 28px rgba(0,0,0,.28);
+    backdrop-filter:blur(4px);
+  }
+
+  .panel-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+  }
+
+  .panel-title{
+    font-size:16px;
+    font-weight:800;
+    margin:0;
+    text-transform:uppercase;
+  }
+
+  .badge{
+    font-size:12px;
+    font-weight:700;
+    padding:6px 10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    white-space:nowrap;
+  }
+
+  table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0 8px;
+    font-size:15px;
+  }
+
+  thead th{
+    font-size:11px;
+    text-transform:uppercase;
+    opacity:.7;
+    padding:0 10px;
+  }
+
+  tbody tr{
+    background:rgba(255,255,255,.06);
+  }
+
+  td{
+    padding:10px 12px;
+  }
+
+  td:last-child{
+    text-align:right;
+    font-weight:900;
+  }
+
+  .reset-wrap{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:8px;
+  }
+
+  .reset-btn{
+    border:1px solid rgba(255,90,90,.6);
+    background:rgba(255,60,60,.14);
+    color:#ffc3c3;
+    padding:8px 10px;
+    border-radius:10px;
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+  }
+
+  .reset-btn:hover{
+    background:rgba(255,60,60,.22);
+  }
+
+  @media (max-height: 780px){
+    .app{
+      justify-content:flex-start;
+      padding-top:16px;
+    }
+
+    .wheel-wrap{
+      width:min(78vw, 430px);
+      height:min(78vw, 430px);
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="title">Ruleta de Premios · Expo 2026</div>
+
+  <div class="wheel-area">
+    <div class="wheel-wrap">
+      <div id="pointer" class="pointer"></div>
+
+      <div class="wheel">
+        <div id="wheelRotator" class="wheel-rotator">
+          <svg id="sectorLines" class="sector-lines" viewBox="0 0 100 100" aria-hidden="true"></svg>
+          <svg id="labelsSvg" class="labels-svg" viewBox="0 0 100 100" aria-hidden="true"></svg>
+        </div>
+
+        <div class="center-cap">
+          <img id="centerImage" alt="Centro ruleta">
+          <button id="spinBtn" class="spin-btn" aria-label="Girar ruleta"></button>
+        </div>
+      </div>
+    </div>
+
+    <div id="resultBig" class="result-big"></div>
+  </div>
+
+  <div class="bottom-panel">
+    <div class="panel-top">
+      <h3 class="panel-title">Resultados</h3>
+      <div id="totalSpins" class="badge">Total: 0</div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Premio</th>
+          <th style="text-align:right;">Veces</th>
+        </tr>
+      </thead>
+      <tbody id="results"></tbody>
+    </table>
+
+    <div class="reset-wrap">
+      <button id="resetBtn" class="reset-btn">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const CENTER_IMAGE = "ruleta.jpeg";
+
+  // 16 casilleros como en la foto
+  const options = [
+    "2%","4%","6%","8%",
+    "10%","12%","15%","20%",
+    "25%","30%","5%","3%",
+    "2%","4%","6%","8%"
+  ];
+
+  const visibleOrder = [...new Set(options)];
+  const step = 360 / options.length;
+  const POINTER_TIP_ANGLE = 270;
+  const EPS_DEG = 1e-6;
+  const SPIN_DURATION = 5200;
+
+  let counts = JSON.parse(localStorage.getItem("ruletaCountsExpo2026")) || {};
+  visibleOrder.forEach(k => {
+    if (typeof counts[k] !== "number") counts[k] = 0;
+  });
+
+  const wheelRotator = document.getElementById("wheelRotator");
+  const labelsSvg = document.getElementById("labelsSvg");
+  const sectorLines = document.getElementById("sectorLines");
+  const pointer = document.getElementById("pointer");
+  const resultBig = document.getElementById("resultBig");
+  const resultsDiv = document.getElementById("results");
+  const totalSpinsEl = document.getElementById("totalSpins");
+  const resetBtn = document.getElementById("resetBtn");
+  const spinBtn = document.getElementById("spinBtn");
+  const centerImage = document.getElementById("centerImage");
+
+  centerImage.src = CENTER_IMAGE;
+
+  let currentRotation = 0;
+  let spinning = false;
+
+  let audioCtx;
+  function ensureAudio(){
+    audioCtx ||= new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === "suspended") audioCtx.resume();
+  }
+
+  function playClick(){
+    if(!audioCtx) return;
+    const t = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = "square";
+    osc.frequency.value = 1200;
+
+    gain.gain.setValueAtTime(0.001, t);
+    gain.gain.exponentialRampToValueAtTime(0.22, t + 0.004);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(t);
+    osc.stop(t + 0.035);
+  }
+
+  function tickPointer(){
+    pointer.classList.remove("tick");
+    void pointer.offsetWidth;
+    pointer.classList.add("tick");
+  }
+
+  function easeOutQuint(x){
+    return 1 - Math.pow(1 - x, 5);
+  }
+
+  function polarPoint(cx, cy, r, angleDeg){
+    const rad = angleDeg * Math.PI / 180;
+    return {
+      x: cx + r * Math.cos(rad),
+      y: cy + r * Math.sin(rad)
+    };
+  }
+
+  function drawSectorLines(){
+    sectorLines.innerHTML = "";
+    const cx = 50, cy = 50, r = 50;
+
+    for(let i = 0; i < options.length; i++){
+      const ang = i * step;
+      const p = polarPoint(cx, cy, r, ang);
+
+      const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+      line.setAttribute("x1", cx);
+      line.setAttribute("y1", cy);
+      line.setAttribute("x2", p.x.toFixed(3));
+      line.setAttribute("y2", p.y.toFixed(3));
+      sectorLines.appendChild(line);
+    }
+  }
+
+  function drawLabels(){
+    labelsSvg.innerHTML = "";
+    const cx = 50, cy = 50;
+    const radius = 39;
+
+    options.forEach((txt, i) => {
+      const ang = i * step + step / 2;
+      const p = polarPoint(cx, cy, radius, ang);
+
+      const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+      t.setAttribute("x", p.x.toFixed(3));
+      t.setAttribute("y", p.y.toFixed(3));
+      t.setAttribute("text-anchor", "middle");
+      t.setAttribute("dominant-baseline", "middle");
+      t.setAttribute("transform", `rotate(${ang + 90} ${p.x.toFixed(3)} ${p.y.toFixed(3)})`);
+      t.textContent = txt;
+
+      labelsSvg.appendChild(t);
+    });
+  }
+
+  function renderResults(){
+    const total = Object.values(counts).reduce((a,b) => a + (Number(b) || 0), 0);
+    resultsDiv.innerHTML = "";
+
+    visibleOrder.forEach(k => {
+      const c = Number(counts[k] || 0);
+      resultsDiv.innerHTML += `
+        <tr>
+          <td>${k}</td>
+          <td>${c}</td>
+        </tr>
+      `;
+    });
+
+    totalSpinsEl.textContent = `Total: ${total}`;
+  }
+
+  function normalize360(a){
+    let x = a % 360;
+    if(x < 0) x += 360;
+    return x;
+  }
+
+  function indexUnderPointer(rotationDeg){
+    const worldAngle = normalize360(POINTER_TIP_ANGLE - rotationDeg);
+    const a = normalize360(worldAngle + EPS_DEG);
+    return Math.floor(a / step);
+  }
+
+  function spin(){
+    if(spinning) return;
+    spinning = true;
+    spinBtn.disabled = true;
+    ensureAudio();
+    resultBig.textContent = "";
+
+    const targetIndex = Math.floor(Math.random() * options.length);
+    const targetCenter = targetIndex * step + step / 2;
+    const extraTurns = 6 + Math.random() * 2.2;
+    const extra = 360 * extraTurns;
+    const targetRotation = currentRotation + extra + (POINTER_TIP_ANGLE - targetCenter);
+
+    const start = performance.now();
+    const from = currentRotation;
+    let lastIdx = indexUnderPointer(from);
+
+    function frame(now){
+      const p = Math.min(1, (now - start) / SPIN_DURATION);
+      const e = easeOutQuint(p);
+      const ang = from + (targetRotation - from) * e;
+
+      wheelRotator.style.transform = `rotate(${ang}deg)`;
+
+      const idx = indexUnderPointer(ang);
+      if(idx !== lastIdx){
+        lastIdx = idx;
+        playClick();
+        tickPointer();
+      }
+
+      if(p < 1){
+        requestAnimationFrame(frame);
+      } else {
+        currentRotation = targetRotation;
+        wheelRotator.style.transform = `rotate(${currentRotation}deg)`;
+
+        const finalIdx = indexUnderPointer(currentRotation);
+        const result = options[finalIdx];
+
+        counts[result] = (Number(counts[result]) || 0) + 1;
+        localStorage.setItem("ruletaCountsExpo2026", JSON.stringify(counts));
+
+        renderResults();
+        resultBig.textContent = `🎉 Ganaste ${result}`;
+        spinning = false;
+        spinBtn.disabled = false;
+      }
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  spinBtn.addEventListener("click", spin);
+
+  resetBtn.addEventListener("click", () => {
+    if(spinning) return;
+    const next = {};
+    visibleOrder.forEach(k => next[k] = 0);
+    counts = next;
+    localStorage.setItem("ruletaCountsExpo2026", JSON.stringify(counts));
+    resultBig.textContent = "";
+    renderResults();
+  });
+
+  drawSectorLines();
+  drawLabels();
+  renderResults();
+</script>
+</body>
+</html>
