@@ -675,11 +675,15 @@
   }
 
   function indexUnderPointer(rotationDeg){
-   // La ruleta fue dibujada arrancando en -90°
-   // y la flecha está en las 12, así que convertimos todo
-   // al mismo sistema antes de calcular el índice.
-   const angleAtPointer = normalize360(POINTER_TIP_ANGLE - rotationDeg - 90);
-   return Math.floor(normalize360(angleAtPointer + EPS_DEG) / step);
+   const normalizedRotation = normalize360(rotationDeg);
+ 
+   // La ruleta visual está dibujada arrancando en -90°
+   // y cada sector ocupa "step" grados.
+   // Esta fórmula traduce la rotación real al índice visible bajo la flecha.
+   const pointerAngleInWheel = normalize360(360 - normalizedRotation);
+   const shifted = normalize360(pointerAngleInWheel + step / 2);
+ 
+   return Math.floor(shifted / step) % options.length;
  }
 
   function polarPoint(cx, cy, r, angleDeg){
@@ -921,14 +925,12 @@ function launchConfetti(){
  
    const targetIndex = Math.floor(Math.random() * options.length);
  
-   // Centro real del sector dentro del sistema dibujado con offset -90
-   const targetCenter = -90 + (targetIndex * step) + (step / 2);
- 
+   // Queremos que el centro del sector elegido quede exactamente bajo la flecha
+   const targetAngle = targetIndex * step;
    const extraTurns = 6 + Math.random() * 2;
    const extra = 360 * extraTurns;
  
-   // Alinear el centro del sector con la flecha superior
-   const targetRotation = currentRotation + extra + (POINTER_TIP_ANGLE - targetCenter);
+   const targetRotation = currentRotation + extra + (360 - targetAngle);
  
    const start = performance.now();
    const from = currentRotation;
