@@ -399,6 +399,158 @@
     background:rgba(255,255,255,.08);
     border:1px solid rgba(255,255,255,.14);
   }
+  /* =========================
+    ANIMACIONES EXTRA EXPO
+ ========================= */
+ 
+ /* Flecha viva en reposo */
+ .pointer{
+   animation: pointerIdle 2.2s ease-in-out infinite;
+ }
+ 
+ @keyframes pointerIdle{
+   0%{ transform:translateX(-50%) translateY(0); }
+   50%{ transform:translateX(-50%) translateY(2px); }
+   100%{ transform:translateX(-50%) translateY(0); }
+ }
+ 
+ .pointer.tick{
+   animation: pointerBounce 90ms ease-out;
+ }
+ 
+ @keyframes pointerBounce{
+   0%{ transform:translateX(-50%) rotate(0deg) translateY(0); }
+   45%{ transform:translateX(-50%) rotate(-10deg) translateY(2px); }
+   100%{ transform:translateX(-50%) rotate(0deg) translateY(0); }
+ }
+ 
+ /* Centro con halo suave */
+ .center-cap{
+   animation: centerPulse 2.8s ease-in-out infinite;
+ }
+ 
+ @keyframes centerPulse{
+   0%{
+     box-shadow:
+       0 14px 30px rgba(0,0,0,.45),
+       inset 0 0 0 2px rgba(255,255,255,.18),
+       inset 0 0 22px rgba(255,255,255,.05),
+       0 0 0 rgba(39,194,199,0);
+   }
+   50%{
+     box-shadow:
+       0 14px 30px rgba(0,0,0,.45),
+       inset 0 0 0 2px rgba(255,255,255,.18),
+       inset 0 0 22px rgba(255,255,255,.05),
+       0 0 26px rgba(39,194,199,.25);
+   }
+   100%{
+     box-shadow:
+       0 14px 30px rgba(0,0,0,.45),
+       inset 0 0 0 2px rgba(255,255,255,.18),
+       inset 0 0 22px rgba(255,255,255,.05),
+       0 0 0 rgba(39,194,199,0);
+   }
+ }
+ 
+ /* Brillo metálico que gira */
+ .wheel::before{
+   content:"";
+   position:absolute;
+   inset:-2%;
+   border-radius:50%;
+   z-index:7;
+   pointer-events:none;
+   background:
+     conic-gradient(
+       from 0deg,
+       rgba(255,255,255,0) 0deg,
+       rgba(255,255,255,.14) 20deg,
+       rgba(255,255,255,0) 42deg,
+       rgba(255,255,255,0) 360deg
+     );
+   mix-blend-mode:screen;
+   animation: metalSweep 4.8s linear infinite;
+   opacity:.55;
+ }
+ 
+ @keyframes metalSweep{
+   from{ transform:rotate(0deg); }
+   to{ transform:rotate(360deg); }
+ }
+ 
+ /* Resultado ganador con pop */
+ .result{
+   position:relative;
+   z-index:120;
+ }
+ 
+ .result.win{
+   animation: resultPop .7s ease-out;
+   text-shadow:
+     0 5px 18px rgba(0,0,0,.35),
+     0 0 20px rgba(246,196,83,.55),
+     0 0 38px rgba(39,194,199,.30);
+ }
+ 
+ @keyframes resultPop{
+   0%{ transform:scale(.82); opacity:.2; }
+   45%{ transform:scale(1.12); opacity:1; }
+   100%{ transform:scale(1); opacity:1; }
+ }
+ 
+ /* Flash del sector ganador */
+ .wheel-rotator.flash{
+   animation: winnerFlash .65s ease-out 2;
+ }
+ 
+ @keyframes winnerFlash{
+   0%{ filter:brightness(1) saturate(1); }
+   40%{ filter:brightness(1.28) saturate(1.35); }
+   100%{ filter:brightness(1) saturate(1); }
+ }
+ 
+ /* Rebote final */
+ .wheel-rotator.rebound{
+   animation: finalRebound .28s ease-out;
+ }
+ 
+ @keyframes finalRebound{
+   0%{ filter:brightness(1); }
+   40%{ filter:brightness(1.08); }
+   100%{ filter:brightness(1); }
+ }
+ 
+ /* Confetti canvas */
+ #confettiCanvas{
+   position:fixed;
+   inset:0;
+   width:100vw;
+   height:100vh;
+   pointer-events:none;
+   z-index:999;
+ }
+ 
+ /* Texto toque para girar, opcional */
+ .tap-hint{
+   position:fixed;
+   bottom:26px;
+   left:50%;
+   transform:translateX(-50%);
+   font-size:16px;
+   font-weight:800;
+   letter-spacing:.1em;
+   text-transform:uppercase;
+   color:rgba(255,255,255,.7);
+   animation: hintPulse 1.8s ease-in-out infinite;
+   pointer-events:none;
+   z-index:150;
+ }
+ 
+ @keyframes hintPulse{
+   0%,100%{ opacity:.35; }
+   50%{ opacity:1; }
+ }
 </style>
 </head>
 <body>
@@ -460,10 +612,47 @@
   let spinning = false;
   let audioCtx;
 
-  function ensureAudio(){
-    audioCtx ||= new (window.AudioContext || window.webkitAudioContext)();
-    if(audioCtx.state === "suspended") audioCtx.resume();
-  }
+ function ensureAudio(){
+   audioCtx ||= new (window.AudioContext || window.webkitAudioContext)();
+   if(audioCtx.state === "suspended") audioCtx.resume();
+ }
+ 
+ function tone({freq=440, type="sine", attack=.005, decay=.08, gain=.12, start=0} = {}){
+   if(!audioCtx) return;
+   const t = audioCtx.currentTime + start;
+   const osc = audioCtx.createOscillator();
+   const g = audioCtx.createGain();
+ 
+   osc.type = type;
+   osc.frequency.setValueAtTime(freq, t);
+ 
+   g.gain.setValueAtTime(0.0001, t);
+   g.gain.exponentialRampToValueAtTime(gain, t + attack);
+   g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay);
+ 
+   osc.connect(g);
+   g.connect(audioCtx.destination);
+   osc.start(t);
+   osc.stop(t + attack + decay + 0.02);
+ }
+ 
+ function playClick(){
+   if(!audioCtx) return;
+   tone({freq:1350, type:"square", attack:.002, decay:.03, gain:.11});
+ }
+ 
+ function playSpinStart(){
+   if(!audioCtx) return;
+   tone({freq:420, type:"triangle", attack:.01, decay:.18, gain:.08});
+   tone({freq:560, type:"triangle", attack:.01, decay:.20, gain:.06, start:.03});
+ }
+ 
+ function playWinSound(){
+   if(!audioCtx) return;
+   tone({freq:784, type:"sine", attack:.01, decay:.18, gain:.12});
+   tone({freq:988, type:"sine", attack:.01, decay:.20, gain:.10, start:.08});
+   tone({freq:1175, type:"sine", attack:.01, decay:.28, gain:.10, start:.16});
+ }
 
   function playClick(){
     if(!audioCtx) return;
@@ -510,7 +699,87 @@
       y: cy + r * Math.sin(rad)
     };
   }
+   function triggerResultPop(){
+    resultBig.classList.remove("win");
+    void resultBig.offsetWidth;
+    resultBig.classList.add("win");
+ }
+ 
+ function triggerWheelFlash(){
+    wheelRotator.classList.remove("flash");
+    void wheelRotator.offsetWidth;
+    wheelRotator.classList.add("flash");
+ }
+ 
+ function triggerRebound(){
+   wheelRotator.classList.remove("rebound");
+   void wheelRotator.offsetWidth;
+   wheelRotator.classList.add("rebound");
+ }
+ const confettiCanvas = document.getElementById("confettiCanvas");
+const confettiCtx = confettiCanvas.getContext("2d");
 
+function resizeConfetti(){
+  confettiCanvas.width = window.innerWidth;
+  confettiCanvas.height = window.innerHeight;
+}
+resizeConfetti();
+window.addEventListener("resize", resizeConfetti);
+
+function launchConfetti(){
+  const pieces = [];
+  const colors = ["#ffd166","#06d6a0","#118ab2","#ef476f","#ffffff","#f6c453"];
+
+  for(let i=0; i<140; i++){
+    pieces.push({
+      x: window.innerWidth * (0.2 + Math.random() * 0.6),
+      y: window.innerHeight * 0.18,
+      vx: (Math.random() - 0.5) * 8,
+      vy: Math.random() * -7 - 2,
+      g: 0.16 + Math.random() * 0.08,
+      size: 5 + Math.random() * 9,
+      rot: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.25,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      life: 80 + Math.random() * 40
+    });
+  }
+
+  let frame = 0;
+  function animate(){
+    confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+
+    pieces.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += p.g;
+      p.rot += p.vr;
+      p.life -= 1;
+
+      confettiCtx.save();
+      confettiCtx.translate(p.x, p.y);
+      confettiCtx.rotate(p.rot);
+      confettiCtx.fillStyle = p.color;
+      confettiCtx.fillRect(-p.size/2, -p.size/2, p.size, p.size * 0.65);
+      confettiCtx.restore();
+    });
+
+    frame++;
+    for(let i = pieces.length - 1; i >= 0; i--){
+      if(pieces[i].life <= 0 || pieces[i].y > confettiCanvas.height + 40){
+        pieces.splice(i,1);
+      }
+    }
+
+    if(pieces.length > 0 && frame < 180){
+      requestAnimationFrame(animate);
+    } else {
+      confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+    }
+  }
+
+  animate();
+}
   function drawBolts(){
     bolts.innerHTML = "";
     const total = 30;
@@ -649,55 +918,68 @@
   }
 
   function spin(){
-   if(spinning) return;
- 
-   spinning = true;
-   if (spinBtnCenter) spinBtnCenter.disabled = true;
- 
-   ensureAudio();
-   resultBig.textContent = "";
- 
-   const targetIndex = Math.floor(Math.random() * options.length);
-   const targetCenter = targetIndex * step + step / 2;
-   const extraTurns = 6 + Math.random() * 2;
-   const extra = 360 * extraTurns;
-   const targetRotation = currentRotation + extra + (POINTER_TIP_ANGLE - targetCenter);
- 
-   const start = performance.now();
-   const from = currentRotation;
-   let lastIdx = indexUnderPointer(from);
- 
-   function frame(now){
-     const p = Math.min(1, (now - start) / SPIN_DURATION);
-     const e = easeOutQuint(p);
-     const ang = from + (targetRotation - from) * e;
- 
-     wheelRotator.style.transform = `rotate(${ang}deg)`;
- 
-     const idx = indexUnderPointer(ang);
-     if(idx !== lastIdx){
-       lastIdx = idx;
-       playClick();
-       tickPointer();
-     }
- 
-     if(p < 1){
-       requestAnimationFrame(frame);
-     } else {
-       currentRotation = targetRotation;
-       wheelRotator.style.transform = `rotate(${currentRotation}deg)`;
- 
-       const finalIdx = indexUnderPointer(currentRotation);
-       const result = options[finalIdx];
-       resultBig.textContent = `🎉 ${result}`;
- 
-       spinning = false;
-       if (spinBtnCenter) spinBtnCenter.disabled = false;
-     }
-   }
- 
-   requestAnimationFrame(frame);
- }
+  if(spinning) return;
+
+  spinning = true;
+  if (spinBtnCenter) spinBtnCenter.disabled = true;
+
+  ensureAudio();
+  playSpinStart();
+
+  resultBig.classList.remove("win");
+  resultBig.textContent = "";
+
+  const targetIndex = Math.floor(Math.random() * options.length);
+  const targetCenter = targetIndex * step + step / 2;
+  const extraTurns = 6 + Math.random() * 2;
+  const extra = 360 * extraTurns;
+  const targetRotation = currentRotation + extra + (POINTER_TIP_ANGLE - targetCenter);
+
+  const start = performance.now();
+  const from = currentRotation;
+  let lastIdx = indexUnderPointer(from);
+
+  function frame(now){
+    const p = Math.min(1, (now - start) / SPIN_DURATION);
+    const e = easeOutQuint(p);
+    const ang = from + (targetRotation - from) * e;
+
+    wheelRotator.style.transform = `rotate(${ang}deg)`;
+
+    const idx = indexUnderPointer(ang);
+    if(idx !== lastIdx){
+      lastIdx = idx;
+      playClick();
+      tickPointer();
+    }
+
+    if(p < 1){
+      requestAnimationFrame(frame);
+    } else {
+      currentRotation = targetRotation;
+      wheelRotator.style.transform = `rotate(${currentRotation}deg)`;
+
+      // Rebote final visual
+      triggerRebound();
+
+      setTimeout(() => {
+        const finalIdx = indexUnderPointer(currentRotation);
+        const result = options[finalIdx];
+
+        resultBig.textContent = `🎉 ${result}`;
+        triggerResultPop();
+        triggerWheelFlash();
+        playWinSound();
+        launchConfetti();
+
+        spinning = false;
+        if (spinBtnCenter) spinBtnCenter.disabled = false;
+      }, 80);
+    }
+  }
+
+  requestAnimationFrame(frame);
+}
   
   function resetWheel(){
     if(spinning) return;
@@ -726,5 +1008,7 @@
   drawSectorLines();
   drawLabels();
 </script>
+ <canvas id="confettiCanvas"></canvas>
+ <div class="tap-hint">Tocá el centro para girar</div>
 </body>
 </html>
