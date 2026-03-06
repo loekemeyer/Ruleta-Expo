@@ -455,8 +455,6 @@
   const pointer = document.getElementById("pointer");
   const resultBig = document.getElementById("resultBig");
   const spinBtnCenter = document.getElementById("spinBtnCenter");
-  const spinBtnMain = document.getElementById("spinBtnMain");
-  const resetBtn = document.getElementById("resetBtn");
 
   let currentRotation = 0;
   let spinning = false;
@@ -651,67 +649,77 @@
   }
 
   function spin(){
-    if(spinning) return;
-
-    spinning = true;
-    spinBtnCenter.disabled = true;
-    spinBtnMain.disabled = true;
-    ensureAudio();
-    resultBig.textContent = "";
-
-    const targetIndex = Math.floor(Math.random() * options.length);
-    const targetCenter = targetIndex * step + step / 2;
-    const extraTurns = 6 + Math.random() * 2;
-    const extra = 360 * extraTurns;
-    const targetRotation = currentRotation + extra + (POINTER_TIP_ANGLE - targetCenter);
-
-    const start = performance.now();
-    const from = currentRotation;
-    let lastIdx = indexUnderPointer(from);
-
-    function frame(now){
-      const p = Math.min(1, (now - start) / SPIN_DURATION);
-      const e = easeOutQuint(p);
-      const ang = from + (targetRotation - from) * e;
-
-      wheelRotator.style.transform = `rotate(${ang}deg)`;
-
-      const idx = indexUnderPointer(ang);
-      if(idx !== lastIdx){
-        lastIdx = idx;
-        playClick();
-        tickPointer();
-      }
-
-      if(p < 1){
-        requestAnimationFrame(frame);
-      } else {
-        currentRotation = targetRotation;
-        wheelRotator.style.transform = `rotate(${currentRotation}deg)`;
-
-        const finalIdx = indexUnderPointer(currentRotation);
-        const result = options[finalIdx];
-        resultBig.textContent = `🎉 ${result}`;
-
-        spinning = false;
-        spinBtnCenter.disabled = false;
-        spinBtnMain.disabled = false;
-      }
-    }
-
-    requestAnimationFrame(frame);
-  }
-  document.body.addEventListener("click", spin);
+   if(spinning) return;
+ 
+   spinning = true;
+   if (spinBtnCenter) spinBtnCenter.disabled = true;
+ 
+   ensureAudio();
+   resultBig.textContent = "";
+ 
+   const targetIndex = Math.floor(Math.random() * options.length);
+   const targetCenter = targetIndex * step + step / 2;
+   const extraTurns = 6 + Math.random() * 2;
+   const extra = 360 * extraTurns;
+   const targetRotation = currentRotation + extra + (POINTER_TIP_ANGLE - targetCenter);
+ 
+   const start = performance.now();
+   const from = currentRotation;
+   let lastIdx = indexUnderPointer(from);
+ 
+   function frame(now){
+     const p = Math.min(1, (now - start) / SPIN_DURATION);
+     const e = easeOutQuint(p);
+     const ang = from + (targetRotation - from) * e;
+ 
+     wheelRotator.style.transform = `rotate(${ang}deg)`;
+ 
+     const idx = indexUnderPointer(ang);
+     if(idx !== lastIdx){
+       lastIdx = idx;
+       playClick();
+       tickPointer();
+     }
+ 
+     if(p < 1){
+       requestAnimationFrame(frame);
+     } else {
+       currentRotation = targetRotation;
+       wheelRotator.style.transform = `rotate(${currentRotation}deg)`;
+ 
+       const finalIdx = indexUnderPointer(currentRotation);
+       const result = options[finalIdx];
+       resultBig.textContent = `🎉 ${result}`;
+ 
+       spinning = false;
+       if (spinBtnCenter) spinBtnCenter.disabled = false;
+     }
+   }
+ 
+   requestAnimationFrame(frame);
+ }
+  
   function resetWheel(){
     if(spinning) return;
     currentRotation = 0;
     wheelRotator.style.transform = "rotate(0deg)";
     resultBig.textContent = "";
   }
-
-  spinBtnCenter.addEventListener("click", spin);
-  spinBtnMain.addEventListener("click", spin);
-  resetBtn.addEventListener("click", resetWheel);
+ 
+   if (spinBtnCenter) {
+    spinBtnCenter.addEventListener("click", spin);
+  }
+ 
+ document.body.addEventListener("click", function(e){
+   if (spinning) return;
+ 
+   // Evita doble disparo si clickean exactamente el centro
+   if (e.target === spinBtnCenter) return;
+ 
+   spin();
+ });
+  
+  
 
   drawBolts();
   drawSectorBackground();
