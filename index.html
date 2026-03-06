@@ -642,22 +642,6 @@
    tone({freq:1175, type:"sine", attack:.01, decay:.28, gain:.10, start:.16});
  }
 
-  function playClick(){
-    if(!audioCtx) return;
-    const t = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = "square";
-    osc.frequency.value = 1250;
-    gain.gain.setValueAtTime(0.001, t);
-    gain.gain.exponentialRampToValueAtTime(0.18, t + 0.0035);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start(t);
-    osc.stop(t + 0.032);
-  }
-
   function tickPointer(){
     pointer.classList.remove("tick");
     void pointer.offsetWidth;
@@ -675,9 +659,14 @@
   }
 
   function indexUnderPointer(rotationDeg){
-   const worldAngle = normalize360(POINTER_TIP_ANGLE - rotationDeg + step/2);
-   const a = normalize360(worldAngle + EPS_DEG);
-   return Math.floor(a / step) % options.length;
+   // Ángulo del mundo bajo la flecha
+   const worldAngle = normalize360(POINTER_TIP_ANGLE - rotationDeg);
+ 
+   // La ruleta fue dibujada empezando en -90°
+   // => compensamos con +90 para volver al índice real del sector
+   const adjusted = normalize360(worldAngle + 90 + EPS_DEG);
+ 
+   return Math.floor(adjusted / step) % options.length;
  }
 
   function polarPoint(cx, cy, r, angleDeg){
@@ -919,12 +908,14 @@ function launchConfetti(){
  
    const targetIndex = Math.floor(Math.random() * options.length);
  
-   // Queremos que el centro del sector elegido quede exactamente bajo la flecha
-   const targetAngle = targetIndex * step;
+   // Centro visual real del sector dibujado
+   const targetCenter = -90 + (targetIndex * step) + (step / 2);
+ 
    const extraTurns = 6 + Math.random() * 2;
    const extra = 360 * extraTurns;
  
-   const targetRotation = currentRotation + extra + (360 - targetAngle);
+   // Alinear el CENTRO del sector con la flecha
+   const targetRotation = currentRotation + extra + (POINTER_TIP_ANGLE - targetCenter);
  
    const start = performance.now();
    const from = currentRotation;
