@@ -30,42 +30,45 @@
   }
 
   .screen{
-    width:100%;
-    height:100%;
+    width:100vw;
+    height:100vh;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    padding:2vh 2vw;
-    gap:2vh;
+    gap:18px;
+    padding:28px 24px;
+    overflow:hidden;
   }
 
   .top-title{
+    margin:0;
     text-align:center;
     text-transform:uppercase;
-    letter-spacing:.12em;
+    letter-spacing:.14em;
     font-weight:900;
     line-height:1;
-    margin:0;
-    font-size:min(3.2vw, 3.2vh, 34px);
-    color:#ffffff;
-    opacity:.95;
+    font-size:30px;
+    color:#fff;
+    opacity:.96;
+    flex:0 0 auto;
   }
 
   .sub-title{
     margin:0;
     text-align:center;
-    font-size:min(1.5vw, 1.7vh, 18px);
+    font-size:16px;
     font-weight:700;
     color:rgba(255,255,255,.72);
-    letter-spacing:.08em;
+    letter-spacing:.10em;
     text-transform:uppercase;
+    flex:0 0 auto;
   }
 
   .wheel-stage{
     position:relative;
-    width:min(78vw, 78vh, 900px);
-    height:min(78vw, 78vh, 900px);
+    width:min(86vw, 74vh);
+    height:min(86vw, 74vh);
     display:flex;
     align-items:center;
     justify-content:center;
@@ -74,14 +77,14 @@
 
   .pointer{
     position:absolute;
-    top:-0.5%;
+    top:-10px;
     left:50%;
     transform:translateX(-50%);
     width:0;
     height:0;
-    border-left:min(1.5vw, 16px) solid transparent;
-    border-right:min(1.5vw, 16px) solid transparent;
-    border-top:min(3vw, 34px) solid #ffffff;
+    border-left:18px solid transparent;
+    border-right:18px solid transparent;
+    border-top:34px solid #fff;
     z-index:50;
     filter:drop-shadow(0 6px 10px rgba(0,0,0,.45));
     transform-origin:50% 100%;
@@ -109,10 +112,10 @@
     inset:0;
     border-radius:50%;
     overflow:hidden;
-    border:min(1.1vw, 12px) solid #0f766e;
+    border:12px solid #0f766e;
     box-shadow:
       0 20px 55px rgba(0,0,0,.45),
-      inset 0 0 0 min(.35vw, 4px) rgba(255,255,255,.12),
+      inset 0 0 0 4px rgba(255,255,255,.12),
       inset 0 0 50px rgba(0,0,0,.18);
     will-change:transform;
     background:
@@ -152,33 +155,33 @@
 
   .labels-svg text{
     fill:var(--cream);
-    stroke:rgba(70,34,12,.65);
-    stroke-width:1.6px;
+    stroke:rgba(70,34,12,.78);
+    stroke-width:1.8px;
     paint-order:stroke fill;
     font-weight:900;
-    letter-spacing:.4px;
+    letter-spacing:.2px;
   }
 
   .center-cap{
     position:absolute;
     top:50%;
     left:50%;
-    width:30%;
+    width:28%;
     aspect-ratio:1/1;
     transform:translate(-50%,-50%);
     border-radius:50%;
     z-index:30;
     background:
       radial-gradient(circle at 30% 30%, #ffffff 0%, #f4f4f4 55%, #dcdcdc 100%);
-    border:min(1vw, 10px) solid #0f766e;
+    border:10px solid #0f766e;
     box-shadow:
       0 12px 28px rgba(0,0,0,.35),
-      inset 0 0 0 min(.35vw, 4px) rgba(255,255,255,.42);
+      inset 0 0 0 4px rgba(255,255,255,.42);
     display:flex;
     align-items:center;
     justify-content:center;
     text-align:center;
-    padding:1.2vw;
+    padding:12px;
   }
 
   .center-content{
@@ -190,7 +193,7 @@
   }
 
   .center-small{
-    font-size:min(1.15vw, 1.15vh, 13px);
+    font-size:12px;
     font-weight:800;
     color:#7a7a7a;
     letter-spacing:.08em;
@@ -198,7 +201,7 @@
   }
 
   .center-main{
-    font-size:min(3vw, 3vh, 34px);
+    font-size:30px;
     font-weight:900;
     color:#0f766e;
     letter-spacing:.04em;
@@ -211,7 +214,7 @@
     color:#fff;
     padding:.42em .9em;
     border-radius:999px;
-    font-size:min(1vw, 1vh, 12px);
+    font-size:11px;
     font-weight:900;
     letter-spacing:.08em;
   }
@@ -227,17 +230,18 @@
   }
 
   .result-box{
-    min-height:12vh;
+    min-height:88px;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:.8vh;
+    gap:8px;
+    flex:0 0 auto;
   }
 
   .result-label{
     margin:0;
-    font-size:min(1.6vw, 1.8vh, 18px);
+    font-size:16px;
     letter-spacing:.14em;
     text-transform:uppercase;
     color:rgba(255,255,255,.6);
@@ -247,19 +251,21 @@
   .result-big{
     margin:0;
     min-height:1.2em;
-    font-size:min(4.5vw, 4.5vh, 54px);
+    font-size:48px;
     line-height:1.05;
     font-weight:900;
     text-align:center;
     text-shadow:0 6px 18px rgba(0,0,0,.35);
+    padding:0 10px;
   }
 
   .cta{
     display:flex;
-    gap:14px;
+    gap:16px;
     justify-content:center;
     align-items:center;
     flex-wrap:wrap;
+    flex:0 0 auto;
   }
 
   .btn{
@@ -269,7 +275,8 @@
     font-weight:900;
     text-transform:uppercase;
     letter-spacing:.08em;
-    transition:transform .15s ease, opacity .15s ease;
+    transition:transform .15s ease;
+    white-space:nowrap;
   }
 
   .btn:hover{ transform:translateY(-1px); }
@@ -278,8 +285,8 @@
   .btn-spin{
     background:linear-gradient(135deg, #ffd166, #e9a91d);
     color:#171717;
-    padding:1em 1.8em;
-    font-size:min(1.4vw, 1.6vh, 18px);
+    padding:16px 34px;
+    font-size:18px;
     box-shadow:0 10px 24px rgba(233,169,29,.22);
   }
 
@@ -287,23 +294,8 @@
     background:rgba(255,255,255,.08);
     color:#fff;
     border:1px solid rgba(255,255,255,.12);
-    padding:.95em 1.5em;
-    font-size:min(1.15vw, 1.3vh, 15px);
-  }
-
-  @media (max-aspect-ratio: 10/16){
-    .wheel-stage{
-      width:min(88vw, 68vh);
-      height:min(88vw, 68vh);
-    }
-
-    .center-cap{
-      width:32%;
-    }
-
-    .result-big{
-      font-size:min(6vw, 3.8vh, 44px);
-    }
+    padding:15px 28px;
+    font-size:16px;
   }
 </style>
 </head>
@@ -430,37 +422,68 @@
   }
 
   function drawLabels(){
-    labelsSvg.innerHTML = "";
-
-    const cx = 50;
-    const cy = 50;
-    const radius = 38.2;
-
-    options.forEach((txt, i) => {
-      const ang = i * step + step / 2;
-      const p = polarPoint(cx, cy, radius, ang);
-
-      const isPercent = txt.includes("%");
-      const fontSize = isPercent ? "7.8" : "4.6";
-
-      const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      t.setAttribute("x", p.x.toFixed(3));
-      t.setAttribute("y", p.y.toFixed(3));
-      t.setAttribute("text-anchor", "middle");
-      t.setAttribute("dominant-baseline", "middle");
-      t.setAttribute("font-size", fontSize);
-
-      // Texto en vertical
-      // 1) gira con el sector
-      // 2) además aplica writing-mode vertical visualmente
-      t.style.writingMode = "vertical-rl";
-      t.style.glyphOrientationVertical = "0";
-      t.setAttribute("transform", `rotate(${ang + 90} ${p.x.toFixed(3)} ${p.y.toFixed(3)})`);
-
-      t.textContent = txt;
-      labelsSvg.appendChild(t);
-    });
-  }
+   labelsSvg.innerHTML = "";
+ 
+   const cx = 50;
+   const cy = 50;
+   const radius = 41.5;
+ 
+   options.forEach((txt, i) => {
+     const ang = i * step + step / 2;
+     const p = polarPoint(cx, cy, radius, ang);
+ 
+     const isPercent = txt.includes("%");
+     const isPremio = txt.startsWith("PREMIO");
+ 
+     if (isPercent) {
+       const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+       t.setAttribute("x", p.x.toFixed(3));
+       t.setAttribute("y", p.y.toFixed(3));
+       t.setAttribute("text-anchor", "middle");
+       t.setAttribute("dominant-baseline", "middle");
+       t.setAttribute("font-size", "7.4");
+       t.style.writingMode = "vertical-rl";
+       t.style.glyphOrientationVertical = "0";
+       t.setAttribute(
+         "transform",
+         `rotate(${ang + 90} ${p.x.toFixed(3)} ${p.y.toFixed(3)})`
+       );
+       t.textContent = txt;
+       labelsSvg.appendChild(t);
+       return;
+     }
+ 
+     if (isPremio) {
+       const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+       g.setAttribute(
+         "transform",
+         `rotate(${ang + 90} ${p.x.toFixed(3)} ${p.y.toFixed(3)})`
+       );
+ 
+       const line1 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+       line1.setAttribute("x", p.x.toFixed(3));
+       line1.setAttribute("y", (p.y - 3.6).toFixed(3));
+       line1.setAttribute("text-anchor", "middle");
+       line1.setAttribute("dominant-baseline", "middle");
+       line1.setAttribute("font-size", "4.2");
+       line1.textContent = "PREMIO";
+ 
+       const num = txt.replace("PREMIO ", "").trim();
+ 
+       const line2 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+       line2.setAttribute("x", p.x.toFixed(3));
+       line2.setAttribute("y", (p.y + 3.8).toFixed(3));
+       line2.setAttribute("text-anchor", "middle");
+       line2.setAttribute("dominant-baseline", "middle");
+       line2.setAttribute("font-size", "6.2");
+       line2.textContent = num;
+ 
+       g.appendChild(line1);
+       g.appendChild(line2);
+       labelsSvg.appendChild(g);
+     }
+   });
+ }
 
   function normalize360(a){
     let x = a % 360;
