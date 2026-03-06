@@ -689,10 +689,12 @@
   }
 
   function indexUnderPointer(rotationDeg){
-    const worldAngle = normalize360(POINTER_TIP_ANGLE - rotationDeg);
-    const a = normalize360(worldAngle + EPS_DEG);
-    return Math.floor(a / step);
-  }
+   // La ruleta fue dibujada arrancando en -90°
+   // y la flecha está en las 12, así que convertimos todo
+   // al mismo sistema antes de calcular el índice.
+   const angleAtPointer = normalize360(POINTER_TIP_ANGLE - rotationDeg - 90);
+   return Math.floor(normalize360(angleAtPointer + EPS_DEG) / step);
+ }
 
   function polarPoint(cx, cy, r, angleDeg){
     const rad = angleDeg * Math.PI / 180;
@@ -920,68 +922,72 @@ function launchConfetti(){
   }
 
   function spin(){
-  if(spinning) return;
-
-  spinning = true;
-  if (spinBtnCenter) spinBtnCenter.disabled = true;
-
-  ensureAudio();
-  playSpinStart();
-
-  resultBig.classList.remove("win");
-  resultBig.textContent = "";
-
-  const targetIndex = Math.floor(Math.random() * options.length);
-  const targetCenter = targetIndex * step + step / 2;
-  const extraTurns = 6 + Math.random() * 2;
-  const extra = 360 * extraTurns;
-  const targetRotation = currentRotation + extra + (POINTER_TIP_ANGLE - targetCenter);
-
-  const start = performance.now();
-  const from = currentRotation;
-  let lastIdx = indexUnderPointer(from);
-
-  function frame(now){
-    const p = Math.min(1, (now - start) / SPIN_DURATION);
-    const e = easeOutQuint(p);
-    const ang = from + (targetRotation - from) * e;
-
-    wheelRotator.style.transform = `rotate(${ang}deg)`;
-
-    const idx = indexUnderPointer(ang);
-    if(idx !== lastIdx){
-      lastIdx = idx;
-      playClick();
-      tickPointer();
-    }
-
-    if(p < 1){
-      requestAnimationFrame(frame);
-    } else {
-      currentRotation = targetRotation;
-      wheelRotator.style.transform = `rotate(${currentRotation}deg)`;
-
-      // Rebote final visual
-      triggerRebound();
-
-      setTimeout(() => {
-        const finalIdx = indexUnderPointer(currentRotation);
-        const result = options[finalIdx];
-
-        resultBig.textContent = `🎉 ${result}`;
-        triggerResultPop();
-        triggerWheelFlash();
-        playWinSound();
-        launchConfetti();
-
-        spinning = false;
-        if (spinBtnCenter) spinBtnCenter.disabled = false;
-      }, 80);
-    }
-  }
-
-  requestAnimationFrame(frame);
-}
+   if(spinning) return;
+ 
+   spinning = true;
+   if (spinBtnCenter) spinBtnCenter.disabled = true;
+ 
+   ensureAudio();
+   playSpinStart();
+ 
+   resultBig.classList.remove("win");
+   resultBig.textContent = "";
+ 
+   const targetIndex = Math.floor(Math.random() * options.length);
+ 
+   // Centro real del sector dentro del sistema dibujado con offset -90
+   const targetCenter = -90 + (targetIndex * step) + (step / 2);
+ 
+   const extraTurns = 6 + Math.random() * 2;
+   const extra = 360 * extraTurns;
+ 
+   // Alinear el centro del sector con la flecha superior
+   const targetRotation = currentRotation + extra + (POINTER_TIP_ANGLE - targetCenter);
+ 
+   const start = performance.now();
+   const from = currentRotation;
+   let lastIdx = indexUnderPointer(from);
+ 
+   function frame(now){
+     const p = Math.min(1, (now - start) / SPIN_DURATION);
+     const e = easeOutQuint(p);
+     const ang = from + (targetRotation - from) * e;
+ 
+     wheelRotator.style.transform = `rotate(${ang}deg)`;
+ 
+     const idx = indexUnderPointer(ang);
+     if(idx !== lastIdx){
+       lastIdx = idx;
+       playClick();
+       tickPointer();
+     }
+ 
+     if(p < 1){
+       requestAnimationFrame(frame);
+     } else {
+       currentRotation = targetRotation;
+       wheelRotator.style.transform = `rotate(${currentRotation}deg)`;
+ 
+       triggerRebound();
+ 
+       setTimeout(() => {
+         const finalIdx = indexUnderPointer(currentRotation);
+         const result = options[finalIdx];
+ 
+         resultBig.textContent = `🎉 ${result}`;
+         triggerResultPop();
+         triggerWheelFlash();
+         playWinSound();
+         launchConfetti();
+ 
+         spinning = false;
+         if (spinBtnCenter) spinBtnCenter.disabled = false;
+       }, 80);
+     }
+   }
+ 
+   requestAnimationFrame(frame);
+ }
   
   function resetWheel(){
     if(spinning) return;
