@@ -3,19 +3,24 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ruleta Expo</title>
+<title>Ruleta Premium Expo</title>
 
 <style>
   *{box-sizing:border-box}
 
   :root{
-    --bg1:#06070b;
-    --bg2:#121520;
-    --bg3:#1a1f2e;
-    --gold:#f6c453;
-    --teal:#0f766e;
-    --cream:#fff3dc;
-    --dark:#161616;
+    --bg:#0f1116;
+    --panel:#171a21;
+    --metal1:#f5f5f5;
+    --metal2:#d9d9d9;
+    --metal3:#8d8d8d;
+    --black:#121212;
+    --gold1:#d8a33e;
+    --gold2:#a66c12;
+    --teal1:#18a7aa;
+    --teal2:#0c7f83;
+    --white1:#fbfbfb;
+    --white2:#dfdfdf;
   }
 
   html,body{
@@ -25,7 +30,7 @@
     overflow:hidden;
     font-family:Arial, Helvetica, sans-serif;
     background:
-      radial-gradient(circle at 50% 18%, #2b3145 0%, #161b29 38%, #090b12 100%);
+      radial-gradient(circle at 50% 20%, #2b2f39 0%, #171b23 38%, #0b0d12 100%);
     color:#fff;
   }
 
@@ -36,43 +41,36 @@
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:18px;
-    padding:28px 24px;
-    overflow:hidden;
+    gap:20px;
+    padding:24px;
   }
 
-  .top-title{
+  .title{
     margin:0;
-    text-align:center;
-    text-transform:uppercase;
-    letter-spacing:.14em;
-    font-weight:900;
-    line-height:1;
     font-size:30px;
-    color:#fff;
-    opacity:.96;
-    flex:0 0 auto;
+    line-height:1;
+    font-weight:900;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    text-align:center;
   }
 
-  .sub-title{
+  .subtitle{
     margin:0;
-    text-align:center;
-    font-size:16px;
-    font-weight:700;
-    color:rgba(255,255,255,.72);
-    letter-spacing:.10em;
+    font-size:15px;
     text-transform:uppercase;
-    flex:0 0 auto;
+    letter-spacing:.12em;
+    color:rgba(255,255,255,.68);
+    font-weight:700;
   }
 
   .wheel-stage{
     position:relative;
-    width:min(86vw, 74vh);
-    height:min(86vw, 74vh);
+    width:min(84vw, 74vh);
+    height:min(84vw, 74vh);
     display:flex;
     align-items:center;
     justify-content:center;
-    flex:0 0 auto;
   }
 
   .pointer{
@@ -82,12 +80,26 @@
     transform:translateX(-50%);
     width:0;
     height:0;
-    border-left:18px solid transparent;
-    border-right:18px solid transparent;
-    border-top:34px solid #fff;
-    z-index:50;
-    filter:drop-shadow(0 6px 10px rgba(0,0,0,.45));
-    transform-origin:50% 100%;
+    border-left:22px solid transparent;
+    border-right:22px solid transparent;
+    border-top:56px solid #202020;
+    filter:
+      drop-shadow(0 5px 8px rgba(0,0,0,.45))
+      drop-shadow(0 0 10px rgba(255,255,255,.12));
+    z-index:60;
+  }
+
+  .pointer::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:-48px;
+    transform:translateX(-50%);
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:radial-gradient(circle, #fff 0%, #fff5c8 45%, #c8b26a 100%);
+    box-shadow:0 0 18px rgba(255,245,180,.9);
   }
 
   .pointer.tick{
@@ -96,7 +108,7 @@
 
   @keyframes tick{
     0%{ transform:translateX(-50%) rotate(0deg); }
-    50%{ transform:translateX(-50%) rotate(-10deg); }
+    50%{ transform:translateX(-50%) rotate(-9deg); }
     100%{ transform:translateX(-50%) rotate(0deg); }
   }
 
@@ -107,36 +119,48 @@
     border-radius:50%;
   }
 
-  .wheel-rotator{
+  .outer-rim{
     position:absolute;
     inset:0;
     border-radius:50%;
-    overflow:hidden;
-    border:12px solid #0f766e;
-    box-shadow:
-      0 20px 55px rgba(0,0,0,.45),
-      inset 0 0 0 4px rgba(255,255,255,.12),
-      inset 0 0 50px rgba(0,0,0,.18);
-    will-change:transform;
     background:
-      conic-gradient(
-        #ef476f 0deg 22.5deg,
-        #ffd166 22.5deg 45deg,
-        #06d6a0 45deg 67.5deg,
-        #118ab2 67.5deg 90deg,
-        #8338ec 90deg 112.5deg,
-        #fb5607 112.5deg 135deg,
-        #ef476f 135deg 157.5deg,
-        #ffd166 157.5deg 180deg,
-        #06d6a0 180deg 202.5deg,
-        #118ab2 202.5deg 225deg,
-        #8338ec 225deg 247.5deg,
-        #fb5607 247.5deg 270deg,
-        #ef476f 270deg 292.5deg,
-        #ffd166 292.5deg 315deg,
-        #06d6a0 315deg 337.5deg,
-        #118ab2 337.5deg 360deg
-      );
+      radial-gradient(circle at 50% 45%, #4e525b 0%, #23272e 48%, #0c0d10 70%, #2d3139 100%);
+    box-shadow:
+      0 20px 60px rgba(0,0,0,.45),
+      inset 0 0 0 2px rgba(255,255,255,.20),
+      inset 0 0 0 10px rgba(0,0,0,.28);
+  }
+
+  .bolts{
+    position:absolute;
+    inset:1.7%;
+    border-radius:50%;
+    pointer-events:none;
+    z-index:5;
+  }
+
+  .bolt{
+    position:absolute;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:
+      radial-gradient(circle at 35% 35%, #fff 0%, #ececec 38%, #777 100%);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,.4),
+      0 1px 2px rgba(0,0,0,.5);
+    transform:translate(-50%, -50%);
+  }
+
+  .wheel-rotator{
+    position:absolute;
+    inset:4.8%;
+    border-radius:50%;
+    overflow:hidden;
+    will-change:transform;
+    box-shadow:
+      inset 0 0 0 2px rgba(255,255,255,.12),
+      inset 0 0 35px rgba(0,0,0,.12);
   }
 
   .sector-lines,
@@ -149,74 +173,69 @@
   }
 
   .sector-lines line{
-    stroke:rgba(0,0,0,.38);
-    stroke-width:3.5;
+    stroke:rgba(0,0,0,.45);
+    stroke-width:2.1;
   }
 
   .labels-svg text{
-    fill:var(--cream);
-    stroke:rgba(70,34,12,.78);
-    stroke-width:1.8px;
-    paint-order:stroke fill;
     font-weight:900;
-    letter-spacing:.2px;
+    text-anchor:middle;
+    dominant-baseline:middle;
+    paint-order:stroke fill;
   }
 
   .center-cap{
     position:absolute;
     top:50%;
     left:50%;
-    width:28%;
+    width:24%;
     aspect-ratio:1/1;
     transform:translate(-50%,-50%);
     border-radius:50%;
-    z-index:30;
+    z-index:40;
     background:
-      radial-gradient(circle at 30% 30%, #ffffff 0%, #f4f4f4 55%, #dcdcdc 100%);
-    border:10px solid #0f766e;
+      radial-gradient(circle at 35% 35%, #7f7f7f 0%, #222 32%, #060606 62%, #5a5a5a 100%);
     box-shadow:
-      0 12px 28px rgba(0,0,0,.35),
-      inset 0 0 0 4px rgba(255,255,255,.42);
+      0 14px 30px rgba(0,0,0,.45),
+      inset 0 0 0 2px rgba(255,255,255,.22),
+      inset 0 0 24px rgba(255,255,255,.06);
     display:flex;
     align-items:center;
     justify-content:center;
-    text-align:center;
-    padding:12px;
   }
 
-  .center-content{
-    color:#111;
-    line-height:1;
-    text-transform:uppercase;
-    user-select:none;
-    pointer-events:none;
+  .center-cap::before{
+    content:"";
+    position:absolute;
+    inset:14%;
+    border-radius:50%;
+    background:
+      conic-gradient(
+        from 0deg,
+        #0f0f0f 0deg,
+        #5e5e5e 25deg,
+        #111 55deg,
+        #8d8d8d 95deg,
+        #101010 145deg,
+        #696969 205deg,
+        #0a0a0a 260deg,
+        #777 315deg,
+        #101010 360deg
+      );
+    box-shadow:
+      inset 0 0 0 2px rgba(255,255,255,.10),
+      inset 0 0 24px rgba(255,255,255,.06);
   }
 
-  .center-small{
-    font-size:12px;
-    font-weight:800;
-    color:#7a7a7a;
-    letter-spacing:.08em;
-    margin-bottom:.35em;
-  }
-
-  .center-main{
-    font-size:30px;
-    font-weight:900;
-    color:#0f766e;
-    letter-spacing:.04em;
-  }
-
-  .center-bottom{
-    margin-top:.45em;
-    display:inline-block;
-    background:linear-gradient(135deg, #f6c453, #e7a91d);
-    color:#fff;
-    padding:.42em .9em;
-    border-radius:999px;
-    font-size:11px;
-    font-weight:900;
-    letter-spacing:.08em;
+  .center-cap::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    margin:auto;
+    width:72%;
+    height:72%;
+    border-radius:50%;
+    box-shadow:0 0 0 2px rgba(214,185,134,.9);
   }
 
   .spin-btn{
@@ -226,111 +245,79 @@
     border-radius:50%;
     background:transparent;
     cursor:pointer;
-    z-index:35;
+    z-index:50;
   }
 
-  .result-box{
-    min-height:88px;
+  .result{
+    min-height:76px;
     display:flex;
-    flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:8px;
-    flex:0 0 auto;
-  }
-
-  .result-label{
-    margin:0;
-    font-size:16px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:rgba(255,255,255,.6);
-    font-weight:800;
-  }
-
-  .result-big{
-    margin:0;
-    min-height:1.2em;
-    font-size:48px;
-    line-height:1.05;
-    font-weight:900;
     text-align:center;
-    text-shadow:0 6px 18px rgba(0,0,0,.35);
-    padding:0 10px;
+    font-size:48px;
+    font-weight:900;
+    letter-spacing:.03em;
+    text-shadow:0 5px 18px rgba(0,0,0,.35);
   }
 
-  .cta{
+  .controls{
     display:flex;
-    gap:16px;
-    justify-content:center;
+    gap:14px;
     align-items:center;
-    flex-wrap:wrap;
-    flex:0 0 auto;
+    justify-content:center;
   }
 
   .btn{
     border:none;
-    cursor:pointer;
     border-radius:999px;
+    padding:15px 28px;
+    font-size:16px;
     font-weight:900;
-    text-transform:uppercase;
     letter-spacing:.08em;
-    transition:transform .15s ease;
-    white-space:nowrap;
+    text-transform:uppercase;
+    cursor:pointer;
   }
 
-  .btn:hover{ transform:translateY(-1px); }
-  .btn:active{ transform:translateY(0); }
-
   .btn-spin{
-    background:linear-gradient(135deg, #ffd166, #e9a91d);
-    color:#171717;
-    padding:16px 34px;
-    font-size:18px;
-    box-shadow:0 10px 24px rgba(233,169,29,.22);
+    color:#141414;
+    background:linear-gradient(135deg, #f6d07a, #d8a33e 65%, #9f6815);
+    box-shadow:0 10px 25px rgba(214,163,62,.22);
   }
 
   .btn-reset{
-    background:rgba(255,255,255,.08);
     color:#fff;
-    border:1px solid rgba(255,255,255,.12);
-    padding:15px 28px;
-    font-size:16px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.14);
   }
 </style>
 </head>
 <body>
 
 <div class="screen">
-  <h1 class="top-title">Ruleta de Premios</h1>
-  <p class="sub-title">Expo 2026</p>
+  <h1 class="title">Ruleta de Premios</h1>
+  <p class="subtitle">Expo 2026</p>
 
   <div class="wheel-stage">
     <div id="pointer" class="pointer"></div>
 
     <div class="wheel">
+      <div class="outer-rim"></div>
+      <div id="bolts" class="bolts"></div>
+
       <div id="wheelRotator" class="wheel-rotator">
-        <svg id="sectorLines" class="sector-lines" viewBox="0 0 100 100" aria-hidden="true"></svg>
-        <svg id="labelsSvg" class="labels-svg" viewBox="0 0 100 100" aria-hidden="true"></svg>
+        <svg id="sectorLines" class="sector-lines" viewBox="0 0 100 100"></svg>
+        <svg id="labelsSvg" class="labels-svg" viewBox="0 0 100 100"></svg>
       </div>
 
       <div class="center-cap">
-        <div class="center-content">
-          <div class="center-small">Probá</div>
-          <div class="center-main">Suerte</div>
-          <div class="center-bottom">Girar</div>
-        </div>
         <button id="spinBtnCenter" class="spin-btn" aria-label="Girar ruleta"></button>
       </div>
     </div>
   </div>
 
-  <div class="result-box">
-    <p class="result-label">Resultado</p>
-    <p id="resultBig" class="result-big"></p>
-  </div>
+  <div id="resultBig" class="result"></div>
 
-  <div class="cta">
+  <div class="controls">
     <button id="spinBtnMain" class="btn btn-spin">Girar ruleta</button>
     <button id="resetBtn" class="btn btn-reset">Reset</button>
   </div>
@@ -352,6 +339,7 @@
   const wheelRotator = document.getElementById("wheelRotator");
   const labelsSvg = document.getElementById("labelsSvg");
   const sectorLines = document.getElementById("sectorLines");
+  const bolts = document.getElementById("bolts");
   const pointer = document.getElementById("pointer");
   const resultBig = document.getElementById("resultBig");
   const spinBtnCenter = document.getElementById("spinBtnCenter");
@@ -360,8 +348,8 @@
 
   let currentRotation = 0;
   let spinning = false;
-
   let audioCtx;
+
   function ensureAudio(){
     audioCtx ||= new (window.AudioContext || window.webkitAudioContext)();
     if(audioCtx.state === "suspended") audioCtx.resume();
@@ -374,16 +362,16 @@
     const gain = audioCtx.createGain();
 
     osc.type = "square";
-    osc.frequency.value = 1400;
+    osc.frequency.value = 1250;
 
     gain.gain.setValueAtTime(0.001, t);
-    gain.gain.exponentialRampToValueAtTime(0.18, t + 0.004);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.028);
+    gain.gain.exponentialRampToValueAtTime(0.18, t + 0.0035);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
 
     osc.connect(gain);
     gain.connect(audioCtx.destination);
     osc.start(t);
-    osc.stop(t + 0.03);
+    osc.stop(t + 0.032);
   }
 
   function tickPointer(){
@@ -396,6 +384,18 @@
     return 1 - Math.pow(1 - x, 5);
   }
 
+  function normalize360(a){
+    let x = a % 360;
+    if (x < 0) x += 360;
+    return x;
+  }
+
+  function indexUnderPointer(rotationDeg){
+    const worldAngle = normalize360(POINTER_TIP_ANGLE - rotationDeg);
+    const a = normalize360(worldAngle + EPS_DEG);
+    return Math.floor(a / step);
+  }
+
   function polarPoint(cx, cy, r, angleDeg){
     const rad = angleDeg * Math.PI / 180;
     return {
@@ -404,15 +404,98 @@
     };
   }
 
+  function drawBolts(){
+    bolts.innerHTML = "";
+    const total = 28;
+    const cx = 50;
+    const cy = 50;
+    const r = 48.7;
+
+    for(let i=0;i<total;i++){
+      const ang = (360/total) * i - 90;
+      const p = polarPoint(cx, cy, r, ang);
+
+      const el = document.createElement("div");
+      el.className = "bolt";
+      el.style.left = p.x + "%";
+      el.style.top = p.y + "%";
+      bolts.appendChild(el);
+    }
+  }
+
+  function sectorFill(i){
+    const palette = [
+      {fill:"url(#segBlack)"},
+      {fill:"url(#segWhite)"},
+      {fill:"url(#segTeal)"},
+      {fill:"url(#segGold)"}
+    ];
+    return palette[i % palette.length].fill;
+  }
+
+  function createDefs(){
+    const defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
+
+    defs.innerHTML = `
+      <linearGradient id="segBlack" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#1c1c1c"/>
+        <stop offset="100%" stop-color="#070707"/>
+      </linearGradient>
+
+      <linearGradient id="segWhite" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="100%" stop-color="#dcdcdc"/>
+      </linearGradient>
+
+      <linearGradient id="segTeal" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#23c4c7"/>
+        <stop offset="100%" stop-color="#0d7f82"/>
+      </linearGradient>
+
+      <linearGradient id="segGold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#efc76c"/>
+        <stop offset="100%" stop-color="#a96b13"/>
+      </linearGradient>
+    `;
+    return defs;
+  }
+
+  function drawWheelBackground(){
+    const ns = "http://www.w3.org/2000/svg";
+    const oldDefs = labelsSvg.querySelector("defs");
+    if(oldDefs) oldDefs.remove();
+    labelsSvg.prepend(createDefs());
+
+    // sectores pintados usando paths
+    const existing = labelsSvg.querySelectorAll(".sector-shape");
+    existing.forEach(el => el.remove());
+
+    const cx = 50, cy = 50, r = 50;
+    for(let i=0;i<options.length;i++){
+      const start = i * step - 90;
+      const end = start + step;
+      const p1 = polarPoint(cx, cy, r, start);
+      const p2 = polarPoint(cx, cy, r, end);
+
+      const path = document.createElementNS(ns, "path");
+      path.setAttribute("class","sector-shape");
+      path.setAttribute(
+        "d",
+        `M ${cx} ${cy} L ${p1.x.toFixed(4)} ${p1.y.toFixed(4)} A ${r} ${r} 0 0 1 ${p2.x.toFixed(4)} ${p2.y.toFixed(4)} Z`
+      );
+      path.setAttribute("fill", sectorFill(i));
+      labelsSvg.insertBefore(path, labelsSvg.firstChild.nextSibling);
+    }
+  }
+
   function drawSectorLines(){
     sectorLines.innerHTML = "";
     const cx = 50, cy = 50, r = 50;
 
-    for(let i = 0; i < options.length; i++){
-      const ang = i * step;
+    for(let i=0;i<options.length;i++){
+      const ang = i * step - 90;
       const p = polarPoint(cx, cy, r, ang);
-
-      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      const line = document.createElementNS("http://www.w3.org/2000/svg","line");
       line.setAttribute("x1", cx);
       line.setAttribute("y1", cy);
       line.setAttribute("x2", p.x.toFixed(3));
@@ -422,79 +505,68 @@
   }
 
   function drawLabels(){
-   labelsSvg.innerHTML = "";
- 
-   const cx = 50;
-   const cy = 50;
-   const radius = 41.5;
- 
-   options.forEach((txt, i) => {
-     const ang = i * step + step / 2;
-     const p = polarPoint(cx, cy, radius, ang);
- 
-     const isPercent = txt.includes("%");
-     const isPremio = txt.startsWith("PREMIO");
- 
-     if (isPercent) {
-       const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-       t.setAttribute("x", p.x.toFixed(3));
-       t.setAttribute("y", p.y.toFixed(3));
-       t.setAttribute("text-anchor", "middle");
-       t.setAttribute("dominant-baseline", "middle");
-       t.setAttribute("font-size", "7.4");
-       t.style.writingMode = "vertical-rl";
-       t.style.glyphOrientationVertical = "0";
-       t.setAttribute(
-         "transform",
-         `rotate(${ang + 90} ${p.x.toFixed(3)} ${p.y.toFixed(3)})`
-       );
-       t.textContent = txt;
-       labelsSvg.appendChild(t);
-       return;
-     }
- 
-     if (isPremio) {
-       const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-       g.setAttribute(
-         "transform",
-         `rotate(${ang + 90} ${p.x.toFixed(3)} ${p.y.toFixed(3)})`
-       );
- 
-       const line1 = document.createElementNS("http://www.w3.org/2000/svg", "text");
-       line1.setAttribute("x", p.x.toFixed(3));
-       line1.setAttribute("y", (p.y - 3.6).toFixed(3));
-       line1.setAttribute("text-anchor", "middle");
-       line1.setAttribute("dominant-baseline", "middle");
-       line1.setAttribute("font-size", "4.2");
-       line1.textContent = "PREMIO";
- 
-       const num = txt.replace("PREMIO ", "").trim();
- 
-       const line2 = document.createElementNS("http://www.w3.org/2000/svg", "text");
-       line2.setAttribute("x", p.x.toFixed(3));
-       line2.setAttribute("y", (p.y + 3.8).toFixed(3));
-       line2.setAttribute("text-anchor", "middle");
-       line2.setAttribute("dominant-baseline", "middle");
-       line2.setAttribute("font-size", "6.2");
-       line2.textContent = num;
- 
-       g.appendChild(line1);
-       g.appendChild(line2);
-       labelsSvg.appendChild(g);
-     }
-   });
- }
+    labelsSvg.querySelectorAll("text,g.text-group").forEach(n => n.remove());
 
-  function normalize360(a){
-    let x = a % 360;
-    if(x < 0) x += 360;
-    return x;
-  }
+    const cx = 50;
+    const cy = 50;
+    const radius = 34.8;
 
-  function indexUnderPointer(rotationDeg){
-    const worldAngle = normalize360(POINTER_TIP_ANGLE - rotationDeg);
-    const a = normalize360(worldAngle + EPS_DEG);
-    return Math.floor(a / step);
+    options.forEach((txt, i) => {
+      const ang = i * step + step / 2 - 90;
+      const p = polarPoint(cx, cy, radius, ang);
+
+      const isPercent = txt.includes("%");
+      const isPremio = txt.startsWith("PREMIO");
+
+      if (isPercent) {
+        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        t.setAttribute("x", p.x.toFixed(3));
+        t.setAttribute("y", p.y.toFixed(3));
+        t.setAttribute("font-size", "7.8");
+        t.setAttribute("transform", `rotate(${ang + 90} ${p.x.toFixed(3)} ${p.y.toFixed(3)})`);
+
+        const darkFill = [0,2].includes(i % 4);
+        t.setAttribute("fill", darkFill ? "#ffffff" : "#3c3c3c");
+        t.setAttribute("stroke", darkFill ? "rgba(0,0,0,.42)" : "rgba(255,255,255,.18)");
+        t.setAttribute("stroke-width", "1.3");
+
+        t.textContent = txt;
+        labelsSvg.appendChild(t);
+        return;
+      }
+
+      if (isPremio) {
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.setAttribute("class","text-group");
+        g.setAttribute("transform", `rotate(${ang + 90} ${p.x.toFixed(3)} ${p.y.toFixed(3)})`);
+
+        const fill = (i % 4 === 0 || i % 4 === 2) ? "#ffffff" : "#fefefe";
+        const stroke = "rgba(0,0,0,.32)";
+
+        const line1 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        line1.setAttribute("x", p.x.toFixed(3));
+        line1.setAttribute("y", (p.y - 2.8).toFixed(3));
+        line1.setAttribute("font-size", "3.6");
+        line1.setAttribute("fill", fill);
+        line1.setAttribute("stroke", stroke);
+        line1.setAttribute("stroke-width", "1");
+        line1.textContent = "PREMIO";
+
+        const num = txt.replace("PREMIO ","").trim();
+        const line2 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        line2.setAttribute("x", p.x.toFixed(3));
+        line2.setAttribute("y", (p.y + 3.4).toFixed(3));
+        line2.setAttribute("font-size", "6.1");
+        line2.setAttribute("fill", fill);
+        line2.setAttribute("stroke", stroke);
+        line2.setAttribute("stroke-width", "1");
+        line2.textContent = num;
+
+        g.appendChild(line1);
+        g.appendChild(line2);
+        labelsSvg.appendChild(g);
+      }
+    });
   }
 
   function spin(){
@@ -538,7 +610,6 @@
 
         const finalIdx = indexUnderPointer(currentRotation);
         const result = options[finalIdx];
-
         resultBig.textContent = `🎉 ${result}`;
 
         spinning = false;
@@ -561,6 +632,8 @@
   spinBtnMain.addEventListener("click", spin);
   resetBtn.addEventListener("click", resetWheel);
 
+  drawBolts();
+  drawWheelBackground();
   drawSectorLines();
   drawLabels();
 </script>
