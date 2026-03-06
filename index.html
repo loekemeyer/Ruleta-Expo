@@ -128,42 +128,28 @@
 
   .pointer{
     position:absolute;
-    top:-1.4%;
+    top:-1.6%;
     left:50%;
     transform:translateX(-50%);
-    width:0;
-    height:0;
-    border-left:24px solid transparent;
-    border-right:24px solid transparent;
-    border-top:72px solid #1d1d1f;
+    width:34px;
+    height:60px;
+    z-index:90;
+ 
     filter:
       drop-shadow(0 6px 10px rgba(0,0,0,.45))
-      drop-shadow(0 0 10px rgba(255,255,255,.10));
-    z-index:90;
-  }
-
-  .pointer{
-   position:absolute;
-   top:-2.2%;
-   left:50%;
-   transform:translateX(-50%);
-   width:54px;
-   height:92px;
-   z-index:90;
-   filter:
-     drop-shadow(0 8px 12px rgba(0,0,0,.45))
-     drop-shadow(0 0 10px rgba(255,255,255,.08));
-   transform-origin:50% 18%;
- }
+      drop-shadow(0 0 6px rgba(255,255,255,.08));
  
+    transform-origin:50% 20%;
+ }
+  
  .pointer::before{
    content:"";
    position:absolute;
    left:50%;
    top:0;
    transform:translateX(-50%);
-   width:54px;
-   height:92px;
+   width:34px;
+   height:60px;
    background:linear-gradient(180deg, #4a4d52 0%, #1f2125 40%, #0d0e11 100%);
    clip-path:polygon(50% 100%, 100% 0, 0 0);
    border-radius:6px 6px 14px 14px;
@@ -179,8 +165,8 @@
    left:50%;
    top:14px;
    transform:translateX(-50%);
-   width:18px;
-   height:18px;
+   width:12px;
+   height:12px;
    border-radius:50%;
    background:radial-gradient(circle, #fff 0%, #fff6cf 40%, #d3b676 100%);
    box-shadow:
