@@ -680,7 +680,7 @@
    // La ruleta visual está dibujada arrancando en -90°
    // y cada sector ocupa "step" grados.
    // Esta fórmula traduce la rotación real al índice visible bajo la flecha.
-   const pointerAngleInWheel = normalize360(360 - normalizedRotation);
+   const pointerAngleInWheel = normalize360(-normalizedRotation);
    const shifted = normalize360(pointerAngleInWheel + step / 2);
  
    return Math.floor(shifted / step) % options.length;
