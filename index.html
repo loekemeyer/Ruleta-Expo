@@ -537,6 +537,68 @@
    0%,100%{ opacity:.35; }
    50%{ opacity:1; }
  }
+ /* =========================
+   LUCES CASINO RUEDA
+========================= */
+
+.lights-ring{
+  position:absolute;
+  inset:-2.8%;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:6;
+}
+
+.light{
+  position:absolute;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+
+  background:
+    radial-gradient(circle,
+      #fff 0%,
+      #ffd166 35%,
+      #f6c453 60%,
+      #b8841c 100%);
+
+  box-shadow:
+    0 0 8px #ffd166,
+    0 0 14px #f6c453,
+    0 0 22px rgba(246,196,83,.8);
+
+  transform:translate(-50%,-50%);
+
+  animation:lightPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes lightPulse{
+  0%{ opacity:.6; transform:translate(-50%,-50%) scale(.9); }
+  50%{ opacity:1; transform:translate(-50%,-50%) scale(1.2); }
+  100%{ opacity:.6; transform:translate(-50%,-50%) scale(.9); }
+}
+
+/* luces más intensas cuando gira */
+.lights-ring.spin .light{
+  animation:lightSpin .5s linear infinite;
+}
+
+@keyframes lightSpin{
+  0%{ filter:brightness(1); }
+  50%{ filter:brightness(1.6); }
+  100%{ filter:brightness(1); }
+}
+
+/* efecto ganador */
+.lights-ring.win .light{
+  animation:lightWin .25s linear infinite;
+}
+
+@keyframes lightWin{
+  0%{ filter:brightness(1); }
+  50%{ filter:brightness(2); }
+  100%{ filter:brightness(1); }
+}
 </style>
 </head>
 <body>
@@ -557,6 +619,7 @@
         <div id="bolts" class="bolts"></div>
 
         <div id="wheelRotator" class="wheel-rotator">
+          <div id="lightsRing" class="lights-ring"></div>
           <svg id="sectorBg" class="sector-bg" viewBox="0 0 100 100"></svg>
           <svg id="sectorLines" class="sector-lines" viewBox="0 0 100 100"></svg>
           <svg id="labelsSvg" class="labels-svg" viewBox="0 0 100 100"></svg>
@@ -592,6 +655,7 @@
   const labelsSvg = document.getElementById("labelsSvg");
   const sectorLines = document.getElementById("sectorLines");
   const bolts = document.getElementById("bolts");
+  const lightsRing = document.getElementById("lightsRing");
   const pointer = document.getElementById("pointer");
   const resultBig = document.getElementById("resultBig");
   const spinBtnCenter = document.getElementById("spinBtnCenter");
@@ -774,6 +838,28 @@ function launchConfetti(){
       bolts.appendChild(el);
     }
   }
+ function drawLights(){
+  lightsRing.innerHTML = "";
+
+  const total = 48;
+  const cx = 50;
+  const cy = 50;
+  const r = 51.5;
+
+  for(let i=0;i<total;i++){
+
+    const ang = (360/total)*i - 90;
+    const p = polarPoint(cx,cy,r,ang);
+
+    const light = document.createElement("div");
+    light.className = "light";
+
+    light.style.left = p.x + "%";
+    light.style.top = p.y + "%";
+
+    lightsRing.appendChild(light);
+  }
+}
 
   function createDefs(){
     const defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
@@ -896,8 +982,10 @@ function launchConfetti(){
 
   function spin(){
    if(spinning) return;
- 
+   lightsRing.classList.add("spin");
+
    spinning = true;
+   
    if (spinBtnCenter) spinBtnCenter.disabled = true;
  
    ensureAudio();
@@ -952,6 +1040,12 @@ function launchConfetti(){
          triggerWheelFlash();
          playWinSound();
          launchConfetti();
+        lightsRing.classList.remove("spin");
+        lightsRing.classList.add("win");
+        
+        setTimeout(() => {
+          lightsRing.classList.remove("win");
+        }, 2000);
  
          spinning = false;
          if (spinBtnCenter) spinBtnCenter.disabled = false;
@@ -988,6 +1082,7 @@ function launchConfetti(){
   drawSectorBackground();
   drawSectorLines();
   drawLabels();
+  drawLights();
 </script>
 
 </body>
