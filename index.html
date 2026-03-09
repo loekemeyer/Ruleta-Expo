@@ -599,6 +599,12 @@
   50%{ filter:brightness(2); }
   100%{ filter:brightness(1); }
 }
+ .wheel-spin-group{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  will-change:transform;
+}
 </style>
 </head>
 <body>
@@ -615,20 +621,21 @@
       <div id="pointer" class="pointer"></div>
 
       <div class="wheel">
-        <div class="outer-rim"></div>
-        <div id="bolts" class="bolts"></div>
-
-        <div id="wheelRotator" class="wheel-rotator">
-          <div id="lightsRing" class="lights-ring"></div>
-          <svg id="sectorBg" class="sector-bg" viewBox="0 0 100 100"></svg>
-          <svg id="sectorLines" class="sector-lines" viewBox="0 0 100 100"></svg>
-          <svg id="labelsSvg" class="labels-svg" viewBox="0 0 100 100"></svg>
-        </div>
-
-        <div class="center-cap">
-          <button id="spinBtnCenter" class="spin-btn" aria-label="Girar ruleta"></button>
-        </div>
-      </div>
+       <div id="wheelSpinGroup" class="wheel-spin-group">
+         <div class="outer-rim"></div>
+         <div id="bolts" class="bolts"></div>
+         <div id="wheelRotator" class="wheel-rotator">
+           <div id="lightsRing" class="lights-ring"></div>
+           <svg id="sectorBg" class="sector-bg" viewBox="0 0 100 100"></svg>
+           <svg id="sectorLines" class="sector-lines" viewBox="0 0 100 100"></svg>
+           <svg id="labelsSvg" class="labels-svg" viewBox="0 0 100 100"></svg>
+         </div>
+       </div>
+     
+       <div class="center-cap">
+         <button id="spinBtnCenter" class="spin-btn" aria-label="Girar ruleta"></button>
+       </div>
+     </div>
     </div>
   </div>
 
@@ -651,6 +658,7 @@
   const SPIN_DURATION = 5200;
 
   const wheelRotator = document.getElementById("wheelRotator");
+  const wheelSpinGroup = document.getElementById("wheelSpinGroup");
   const sectorBg = document.getElementById("sectorBg");
   const labelsSvg = document.getElementById("labelsSvg");
   const sectorLines = document.getElementById("sectorLines");
@@ -1014,7 +1022,7 @@ function launchConfetti(){
      const e = easeOutQuint(p);
      const ang = from + (targetRotation - from) * e;
  
-     wheelRotator.style.transform = `rotate(${ang}deg)`;
+     wheelSpinGroup.style.transform = `rotate(${ang}deg)`;
  
      const idx = indexUnderPointer(ang);
      if(idx !== lastIdx){
@@ -1027,7 +1035,7 @@ function launchConfetti(){
        requestAnimationFrame(frame);
      } else {
        currentRotation = targetRotation;
-       wheelRotator.style.transform = `rotate(${currentRotation}deg)`;
+       wheelSpinGroup.style.transform = `rotate(${currentRotation}deg)`;
  
        triggerRebound();
  
@@ -1059,7 +1067,7 @@ function launchConfetti(){
   function resetWheel(){
     if(spinning) return;
     currentRotation = 0;
-    wheelRotator.style.transform = "rotate(0deg)";
+    wheelSpinGroup.style.transform = "rotate(0deg)";
     resultBig.textContent = "";
   }
  
